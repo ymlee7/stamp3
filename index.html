@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Souvenir Stamps — personal stamp inventory and hunt tracker. Track your collection, upcoming events, and stamp books.">
+<meta name="theme-color" content="#4A90D9">
+<title>Souvenir Stamps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Variables ── */
+:root {
+  --sky:    #4A90D9;
+  --sky-dk: #3070B8;
+  --sky-lt: #E8F2FB;
+  --gold:   #F5A623;
+  --gold-dk:#D48B10;
+  --gold-lt:#FEF5E7;
+  --cloud:  #F8F9FA;
+  --white:  #FFFFFF;
+  --dark:   #2C3E50;
+  --mid:    #5D6D7E;
+  --light:  #BDC3C7;
+  --border: #E0E6ED;
+  --red:    #E74C3C;
+  --green:  #27AE60;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(44,62,80,.10);
+  --shadow-lg: 0 8px 32px rgba(44,62,80,.18);
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+font-family: ‘Figtree’, sans-serif;
+background: var(–cloud);
+color: var(–dark);
+min-height: 100vh;
+overflow-y: auto;
+-webkit-overflow-scrolling: touch;
+}
+
+/* ── Header ── */
+.app-header {
+background: linear-gradient(135deg, var(–sky) 0%, var(–sky-dk) 100%);
+color: #fff;
+padding: 0 24px;
+position: sticky;
+top: 0;
+z-index: 100;
+box-shadow: 0 2px 16px rgba(44,62,80,.2);
+}
+.header-top {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 14px 0 10px;
+gap: 12px;
+}
+.header-title { font-family: ‘DM Serif Display’, serif; font-size: 1.5rem; line-height: 1.2; }
+.header-title span { display: block; font-family: ‘Figtree’, sans-serif; font-size: .75rem; font-weight: 400; opacity: .8; letter-spacing: .04em; margin-top: 1px; }
+.user-selector {
+display: flex;
+align-items: center;
+gap: 8px;
+background: rgba(255,255,255,.15);
+border: 1px solid rgba(255,255,255,.3);
+border-radius: 24px;
+padding: 6px 14px 6px 8px;
+cursor: pointer;
+transition: background .2s;
+white-space: nowrap;
+}
+.user-selector:hover { background: rgba(255,255,255,.25); }
+.user-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+.user-dot.ymlee   { background: var(–gold); color: var(–dark); }
+.user-dot.calvin  { background: #8E44AD; }
+.user-dot.other   { background: #27AE60; }
+.user-name { font-size: .85rem; font-weight: 600; color: #fff; }
+.user-chevron { font-size: .7rem; opacity: .7; }
+
+/* Tabs */
+.tab-bar {
+display: flex;
+gap: 0;
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+scrollbar-width: none;
+margin-top: 4px;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+background: none;
+border: none;
+color: rgba(255,255,255,.65);
+font-family: ‘Figtree’, sans-serif;
+font-size: .82rem;
+font-weight: 600;
+padding: 10px 18px;
+cursor: pointer;
+border-bottom: 3px solid transparent;
+white-space: nowrap;
+transition: color .2s, border-color .2s;
+display: flex;
+align-items: center;
+gap: 6px;
+}
+.tab-btn:hover { color: rgba(255,255,255,.9); }
+.tab-btn.active { color: #fff; border-bottom-color: var(–gold); }
+.tab-count {
+background: rgba(255,255,255,.2);
+border-radius: 10px;
+padding: 1px 7px;
+font-size: .72rem;
+font-weight: 700;
+min-width: 20px;
+text-align: center;
+}
+.tab-btn.active .tab-count { background: var(–gold); color: var(–dark); }
+
+/* ── Content ── */
+.content { padding: 24px; max-width: 1100px; margin: 0 auto; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── Section header ── */
+.section-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 20px;
+flex-wrap: wrap;
+gap: 12px;
+}
+.section-title { font-family: ‘DM Serif Display’, serif; font-size: 1.4rem; color: var(–dark); }
+.section-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ── Buttons ── */
+.btn {
+font-family: ‘Figtree’, sans-serif;
+font-size: .85rem;
+font-weight: 600;
+padding: 9px 18px;
+border-radius: 8px;
+border: none;
+cursor: pointer;
+display: inline-flex;
+align-items: center;
+gap: 6px;
+transition: all .15s;
+white-space: nowrap;
+}
+.btn:active { transform: scale(.97); }
+.btn-primary   { background: var(–sky); color: #fff; }
+.btn-primary:hover { background: var(–sky-dk); }
+.btn-gold      { background: var(–gold); color: var(–dark); }
+.btn-gold:hover { background: var(–gold-dk); }
+.btn-outline   { background: #fff; color: var(–dark); border: 1.5px solid var(–border); }
+.btn-outline:hover { border-color: var(–sky); color: var(–sky); }
+.btn-danger    { background: var(–red); color: #fff; }
+.btn-danger:hover { background: #c0392b; }
+.btn-ghost     { background: none; border: none; color: var(–mid); padding: 6px 8px; font-size: .82rem; }
+.btn-ghost:hover { color: var(–dark); background: var(–cloud); border-radius: 6px; }
+.btn-sm { padding: 6px 12px; font-size: .78rem; }
+.btn-icon { padding: 7px; border-radius: 8px; background: none; border: 1.5px solid var(–border); color: var(–mid); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; transition: all .15s; }
+.btn-icon:hover { border-color: var(–sky); color: var(–sky); background: var(–sky-lt); }
+.btn-icon.danger:hover { border-color: var(–red); color: var(–red); background: #fdecea; }
+
+/* ── Cards / Table ── */
+.card {
+background: #fff;
+border-radius: var(–radius);
+border: 1.5px solid var(–border);
+overflow: hidden;
+box-shadow: var(–shadow);
+}
+.card-body { padding: 20px; }
+
+/* Stamps table */
+.stamp-table { width: 100%; border-collapse: collapse; }
+.stamp-table th {
+background: var(–cloud);
+color: var(–mid);
+font-size: .75rem;
+font-weight: 700;
+letter-spacing: .06em;
+text-transform: uppercase;
+padding: 10px 14px;
+text-align: left;
+border-bottom: 1.5px solid var(–border);
+}
+.stamp-table td {
+padding: 12px 14px;
+border-bottom: 1px solid var(–border);
+font-size: .88rem;
+vertical-align: middle;
+}
+.stamp-table tr:last-child td { border-bottom: none; }
+.stamp-table tr:hover td { background: var(–sky-lt); }
+.stamp-table tr.disabled td { opacity: .5; }
+
+.badge {
+display: inline-flex;
+align-items: center;
+padding: 3px 9px;
+border-radius: 20px;
+font-size: .72rem;
+font-weight: 700;
+white-space: nowrap;
+}
+.badge-event     { background: var(–gold-lt); color: var(–gold-dk); }
+.badge-regular   { background: var(–sky-lt);  color: var(–sky-dk); }
+.badge-disabled  { background: #f5f5f5; color: #999; }
+.badge-past      { background: #f0e6f6; color: #8E44AD; }
+.badge-collected { background: #e8f8f0; color: var(–green); }
+
+/* ── Stamp Book Cards ── */
+.books-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+gap: 16px;
+}
+.book-card {
+background: #fff;
+border-radius: var(–radius);
+border: 1.5px solid var(–border);
+box-shadow: var(–shadow);
+overflow: hidden;
+transition: box-shadow .2s, transform .15s;
+}
+.book-card:hover { box-shadow: var(–shadow-lg); transform: translateY(-2px); }
+.book-card-top {
+background: linear-gradient(135deg, var(–sky-lt) 0%, #daeeff 100%);
+padding: 18px 18px 14px;
+border-bottom: 1.5px solid var(–border);
+position: relative;
+}
+.book-seq {
+position: absolute;
+top: 12px;
+right: 14px;
+background: var(–sky);
+color: #fff;
+border-radius: 8px;
+padding: 3px 10px;
+font-size: .78rem;
+font-weight: 700;
+letter-spacing: .04em;
+}
+.book-icon { font-size: 2rem; margin-bottom: 6px; }
+.book-name { font-family: ‘DM Serif Display’, serif; font-size: 1.15rem; color: var(–dark); line-height: 1.3; padding-right: 52px; }
+.book-date { font-size: .76rem; color: var(–mid); margin-top: 4px; }
+.book-card-body { padding: 14px 18px; }
+.book-stamp-count {
+display: flex;
+align-items: center;
+gap: 6px;
+font-size: .84rem;
+color: var(–mid);
+margin-bottom: 14px;
+}
+.book-stamp-count strong { color: var(–dark); font-size: 1.1rem; }
+.book-actions { display: flex; gap: 8px; }
+.book-actions .btn { flex: 1; justify-content: center; }
+
+/* ── My Collection ── */
+.collection-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+gap: 12px;
+}
+.collection-item {
+background: #fff;
+border-radius: 10px;
+border: 1.5px solid var(–border);
+padding: 14px;
+cursor: pointer;
+transition: all .15s;
+position: relative;
+}
+.collection-item:hover { border-color: var(–sky); box-shadow: 0 2px 8px rgba(74,144,217,.15); }
+.collection-item.collected {
+border-color: var(–green);
+background: linear-gradient(135deg, #f0fff6 0%, #e8f8f0 100%);
+}
+.collection-check {
+position: absolute;
+top: 10px;
+right: 10px;
+width: 22px;
+height: 22px;
+border-radius: 50%;
+border: 2px solid var(–light);
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: .75rem;
+transition: all .15s;
+}
+.collection-item.collected .collection-check {
+background: var(–green);
+border-color: var(–green);
+color: #fff;
+}
+.ci-name { font-size: .88rem; font-weight: 600; color: var(–dark); margin-bottom: 4px; padding-right: 26px; }
+.ci-meta { font-size: .75rem; color: var(–mid); }
+
+/* ── Hunt Categories ── */
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.cat-card {
+background: #fff;
+border-radius: var(–radius);
+border: 1.5px solid var(–border);
+box-shadow: var(–shadow);
+overflow: hidden;
+}
+.cat-card-top {
+background: linear-gradient(135deg, var(–gold-lt) 0%, #fde8c0 100%);
+padding: 16px;
+border-bottom: 1.5px solid var(–border);
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.cat-name { font-family: ‘DM Serif Display’, serif; font-size: 1.1rem; color: var(–dark); }
+.cat-body { padding: 14px 16px; font-size: .82rem; color: var(–mid); display: flex; flex-direction: column; gap: 4px; }
+.cat-body span { display: flex; gap: 6px; }
+.cat-actions { display: flex; gap: 6px; }
+
+/* ── Upcoming Events ── */
+.events-filter {
+background: #fff;
+border-radius: var(–radius);
+border: 1.5px solid var(–border);
+padding: 16px;
+margin-bottom: 20px;
+display: flex;
+gap: 12px;
+flex-wrap: wrap;
+align-items: center;
+}
+.filter-group { display: flex; flex-direction: column; gap: 4px; }
+.filter-label { font-size: .72rem; font-weight: 700; color: var(–mid); text-transform: uppercase; letter-spacing: .05em; }
+.filter-select, .filter-input {
+font-family: ‘Figtree’, sans-serif;
+font-size: .85rem;
+padding: 8px 12px;
+border: 1.5px solid var(–border);
+border-radius: 8px;
+color: var(–dark);
+background: #fff;
+outline: none;
+transition: border-color .15s;
+}
+.filter-select:focus, .filter-input:focus { border-color: var(–sky); }
+.event-card {
+background: #fff;
+border-radius: var(–radius);
+border: 1.5px solid var(–border);
+padding: 16px;
+display: flex;
+align-items: flex-start;
+gap: 16px;
+margin-bottom: 12px;
+box-shadow: var(–shadow);
+}
+.event-date-badge {
+background: var(–gold-lt);
+border: 1.5px solid var(–gold);
+border-radius: 10px;
+padding: 8px 12px;
+text-align: center;
+min-width: 56px;
+flex-shrink: 0;
+}
+.event-date-badge .month { font-size: .65rem; font-weight: 700; color: var(–gold-dk); text-transform: uppercase; letter-spacing: .08em; }
+.event-date-badge .day   { font-size: 1.5rem; font-weight: 700; color: var(–dark); line-height: 1; }
+.event-info { flex: 1; }
+.event-name { font-weight: 700; font-size: .95rem; color: var(–dark); margin-bottom: 4px; }
+.event-meta { font-size: .78rem; color: var(–mid); display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ── Search ── */
+.search-bar {
+display: flex;
+gap: 10px;
+margin-bottom: 16px;
+flex-wrap: wrap;
+}
+.search-input {
+flex: 1;
+min-width: 200px;
+font-family: ‘Figtree’, sans-serif;
+font-size: .9rem;
+padding: 10px 14px 10px 38px;
+border: 1.5px solid var(–border);
+border-radius: 8px;
+color: var(–dark);
+background: #fff url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘16’ height=‘16’ fill=’%23BDC3C7’ viewBox=‘0 0 16 16’%3E%3Cpath d=‘M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z’/%3E%3C/svg%3E”) no-repeat 12px center;
+outline: none;
+transition: border-color .15s;
+}
+.search-input:focus { border-color: var(–sky); }
+
+/* ── Modals ── */
+.modal-overlay {
+display: none;
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,.45);
+z-index: 200;
+align-items: center;
+justify-content: center;
+padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+background: #fff;
+border-radius: 16px;
+box-shadow: var(–shadow-lg);
+width: 100%;
+max-width: 540px;
+max-height: 90vh;
+display: flex;
+flex-direction: column;
+overflow: hidden;
+}
+.modal-lg { max-width: 780px; }
+.modal-xl { max-width: 1000px; }
+.modal-header {
+padding: 20px 24px 16px;
+border-bottom: 1.5px solid var(–border);
+display: flex;
+align-items: center;
+justify-content: space-between;
+flex-shrink: 0;
+}
+.modal-title { font-family: ‘DM Serif Display’, serif; font-size: 1.2rem; color: var(–dark); }
+.modal-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(–mid); padding: 4px; border-radius: 6px; }
+.modal-close:hover { color: var(–dark); background: var(–cloud); }
+.modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+.modal-footer {
+padding: 14px 24px;
+border-top: 1.5px solid var(–border);
+display: flex;
+gap: 10px;
+justify-content: flex-end;
+flex-shrink: 0;
+}
+
+/* ── Form ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-grid.one-col { grid-template-columns: 1fr; }
+.form-col-full { grid-column: 1 / -1; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-label { font-size: .78rem; font-weight: 700; color: var(–mid); text-transform: uppercase; letter-spacing: .05em; }
+.form-input, .form-select, .form-textarea {
+font-family: ‘Figtree’, sans-serif;
+font-size: .9rem;
+padding: 10px 12px;
+border: 1.5px solid var(–border);
+border-radius: 8px;
+color: var(–dark);
+background: #fff;
+outline: none;
+transition: border-color .15s;
+width: 100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(–sky); }
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-hint { font-size: .74rem; color: var(–mid); }
+.form-check { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: .9rem; }
+.form-check input[type=checkbox] { width: 16px; height: 16px; accent-color: var(–sky); cursor: pointer; }
+
+/* Stamp selector in book modal */
+.stamp-selector-filters {
+display: flex;
+gap: 8px;
+margin-bottom: 12px;
+flex-wrap: wrap;
+align-items: center;
+}
+.stamp-selector-list {
+border: 1.5px solid var(–border);
+border-radius: 8px;
+overflow: hidden;
+max-height: 420px;
+overflow-y: auto;
+}
+.stamp-selector-item {
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 11px 14px;
+border-bottom: 1px solid var(–border);
+cursor: pointer;
+transition: background .1s;
+}
+.stamp-selector-item:last-child { border-bottom: none; }
+.stamp-selector-item:hover { background: var(–sky-lt); }
+.stamp-selector-item.selected { background: #e8f8f0; }
+.stamp-selector-item input[type=checkbox] { width: 17px; height: 17px; accent-color: var(–sky); flex-shrink: 0; cursor: pointer; }
+.ssi-info { flex: 1; }
+.ssi-name { font-size: .88rem; font-weight: 600; color: var(–dark); }
+.ssi-meta { font-size: .75rem; color: var(–mid); display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.ssi-tags { display: flex; gap: 4px; flex-shrink: 0; }
+.sel-count { font-size: .82rem; color: var(–mid); }
+.sel-count strong { color: var(–sky); }
+
+/* User dropdown */
+.user-dropdown {
+display: none;
+position: absolute;
+top: calc(100% + 6px);
+right: 0;
+background: #fff;
+border: 1.5px solid var(–border);
+border-radius: 12px;
+box-shadow: var(–shadow-lg);
+z-index: 150;
+min-width: 180px;
+overflow: hidden;
+}
+.user-dropdown.open { display: block; }
+.user-dropdown-item {
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 12px 16px;
+cursor: pointer;
+font-size: .88rem;
+font-weight: 500;
+transition: background .1s;
+}
+.user-dropdown-item:hover { background: var(–cloud); }
+.user-dropdown-item.active { background: var(–sky-lt); color: var(–sky); }
+.header-right { position: relative; }
+
+/* Toast */
+.toast {
+position: fixed;
+bottom: 24px;
+right: 24px;
+background: var(–dark);
+color: #fff;
+padding: 12px 18px;
+border-radius: 10px;
+font-size: .88rem;
+font-weight: 500;
+box-shadow: var(–shadow-lg);
+z-index: 999;
+transform: translateY(80px);
+opacity: 0;
+transition: all .3s ease;
+max-width: 320px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { background: var(–green); }
+.toast.error { background: var(–red); }
+
+/* Empty state */
+.empty-state {
+text-align: center;
+padding: 48px 24px;
+color: var(–mid);
+}
+.empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: .6; }
+.empty-state h3 { font-family: ‘DM Serif Display’, serif; font-size: 1.2rem; color: var(–dark); margin-bottom: 6px; }
+.empty-state p { font-size: .88rem; }
+
+/* ── Import / Export button ── */
+.io-btn {
+background: rgba(255,255,255,.15);
+border: 1.5px solid rgba(255,255,255,.35);
+color: #fff;
+font-family: ‘Figtree’, sans-serif;
+font-size: .8rem;
+font-weight: 600;
+padding: 7px 13px;
+border-radius: 8px;
+cursor: pointer;
+white-space: nowrap;
+transition: background .2s;
+display: flex;
+align-items: center;
+gap: 5px;
+}
+.io-btn:hover { background: rgba(255,255,255,.28); }
+
+/* ── Import/Export modal sections ── */
+.io-section {
+border: 1.5px solid var(–border);
+border-radius: var(–radius);
+overflow: hidden;
+margin-bottom: 20px;
+}
+.io-section:last-child { margin-bottom: 0; }
+.io-section-header {
+background: var(–cloud);
+padding: 12px 16px;
+border-bottom: 1.5px solid var(–border);
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.io-section-title { font-weight: 700; font-size: .9rem; color: var(–dark); }
+.io-section-body { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.io-row {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 12px;
+flex-wrap: wrap;
+}
+.io-row-info { flex: 1; }
+.io-row-label { font-size: .88rem; font-weight: 600; color: var(–dark); }
+.io-row-desc  { font-size: .76rem; color: var(–mid); margin-top: 2px; }
+.io-divider { border: none; border-top: 1px solid var(–border); margin: 4px 0; }
+.import-warning {
+background: #fff8e6;
+border: 1.5px solid var(–gold);
+border-radius: 8px;
+padding: 10px 14px;
+font-size: .82rem;
+color: #7a5200;
+display: flex;
+gap: 8px;
+align-items: flex-start;
+}
+.cat-pdf-list { display: flex; flex-direction: column; gap: 8px; }
+.cat-pdf-row {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 10px;
+padding: 9px 12px;
+background: var(–cloud);
+border-radius: 8px;
+}
+.cat-pdf-name { font-size: .88rem; font-weight: 600; color: var(–dark); }
+.cat-pdf-count { font-size: .76rem; color: var(–mid); }
+
+/* ── Print / PDF styles ── */
+@media print {
+body * { visibility: hidden; }
+#printRegion, #printRegion * { visibility: visible; }
+#printRegion {
+position: fixed;
+top: 0; left: 0;
+width: 100%;
+font-family: ‘Figtree’, sans-serif;
+}
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+.content { padding: 16px; }
+.header-top { padding: 10px 0 8px; }
+.header-title { font-size: 1.2rem; }
+.form-grid { grid-template-columns: 1fr; }
+.books-grid { grid-template-columns: 1fr; }
+.tab-btn { padding: 10px 13px; font-size: .78rem; }
+.io-btn span { display: none; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- ════ HEADER ════ -->
+
+<header class="app-header">
+  <div class="header-top">
+    <div class="header-title">
+      Souvenir Stamps
+      <span>Inventory and Hunting</span>
+    </div>
+    <div class="header-right" style="display:flex;align-items:center;gap:10px">
+      <button class="io-btn" onclick="openIoModal()">⇅ <span>Import / Export</span></button>
+      <div style="position:relative">
+      <div class="user-selector" id="userSelectorBtn" onclick="toggleUserDropdown()">
+        <div class="user-dot" id="headerDot">YM</div>
+        <span class="user-name" id="headerName">ymlee.admin</span>
+        <span class="user-chevron">▾</span>
+      </div>
+      <div class="user-dropdown" id="userDropdown">
+        <div class="user-dropdown-item active" data-user="ymlee.admin" onclick="switchUser('ymlee.admin')">
+          <div class="user-dot ymlee">YM</div> ymlee.admin
+        </div>
+        <div class="user-dropdown-item" data-user="calvin.lee" onclick="switchUser('calvin.lee')">
+          <div class="user-dot calvin">CL</div> calvin.lee
+        </div>
+      </div>
+      </div><!-- /user wrapper -->
+    </div>
+  </div>
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="directory" onclick="switchTab('directory')">
+      📋 Directory <span class="tab-count" id="cnt-directory">0</span>
+    </button>
+    <button class="tab-btn" data-tab="collection" onclick="switchTab('collection')">
+      ⭐ My Collection <span class="tab-count" id="cnt-collection">0</span>
+    </button>
+    <button class="tab-btn" data-tab="categories" onclick="switchTab('categories')">
+      🏷️ Hunt Categories <span class="tab-count" id="cnt-categories">0</span>
+    </button>
+    <button class="tab-btn" data-tab="events" onclick="switchTab('events')">
+      📅 Upcoming Events <span class="tab-count" id="cnt-events">0</span>
+    </button>
+    <button class="tab-btn" data-tab="books" onclick="switchTab('books')">
+      📖 Stamp Books <span class="tab-count" id="cnt-books">0</span>
+    </button>
+  </nav>
+</header>
+
+<!-- ════ CONTENT ════ -->
+
+<main class="content">
+
+  <!-- ── Tab: Directory ── -->
+
+  <div class="tab-panel active" id="tab-directory">
+    <div class="section-header">
+      <div class="section-title">Stamp Directory</div>
+      <div class="section-actions" id="adminActions">
+        <button class="btn btn-gold" onclick="openStampModal()">＋ Add Stamp</button>
+      </div>
+    </div>
+    <div class="search-bar">
+      <input class="search-input" type="text" id="dirSearch" placeholder="Search stamps…" oninput="renderDirectory()">
+      <select class="filter-select" id="dirFilterCat" onchange="renderDirectory()" style="min-width:130px">
+        <option value="">All Categories</option>
+      </select>
+      <select class="filter-select" id="dirFilterType" onchange="renderDirectory()" style="min-width:110px">
+        <option value="">All Types</option>
+        <option value="Regular">Regular</option>
+        <option value="Event">Event</option>
+      </select>
+      <select class="filter-select" id="dirFilterStatus" onchange="renderDirectory()" style="min-width:120px">
+        <option value="all">Show All</option>
+        <option value="active">Active Only</option>
+        <option value="disabled">Disabled Only</option>
+      </select>
+    </div>
+    <div class="card">
+      <div style="overflow-x:auto">
+        <table class="stamp-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Country / State</th>
+              <th>Category</th>
+              <th>Type</th>
+              <th>Location</th>
+              <th>Date Added</th>
+              <th style="text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="directoryBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Tab: My Collection ── -->
+
+  <div class="tab-panel" id="tab-collection">
+    <div class="section-header">
+      <div class="section-title" id="collectionTitle">My Collection</div>
+      <div class="section-actions">
+        <span id="collectionStats" style="font-size:.85rem;color:var(--mid);align-self:center"></span>
+      </div>
+    </div>
+    <div class="search-bar">
+      <input class="search-input" type="text" id="colSearch" placeholder="Search stamps…" oninput="renderCollection()">
+      <select class="filter-select" id="colFilter" onchange="renderCollection()" style="min-width:140px">
+        <option value="all">All Stamps</option>
+        <option value="collected">Collected</option>
+        <option value="not-collected">Not Collected</option>
+      </select>
+    </div>
+    <div class="collection-grid" id="collectionGrid"></div>
+  </div>
+
+  <!-- ── Tab: Hunt Categories ── -->
+
+  <div class="tab-panel" id="tab-categories">
+    <div class="section-header">
+      <div class="section-title">Hunt Categories</div>
+      <div class="section-actions">
+        <button class="btn btn-gold" onclick="openCatModal()">＋ Add Category</button>
+      </div>
+    </div>
+    <div class="cat-grid" id="catGrid"></div>
+  </div>
+
+  <!-- ── Tab: Upcoming Events ── -->
+
+  <div class="tab-panel" id="tab-events">
+    <div class="section-header">
+      <div class="section-title">Upcoming Events</div>
+    </div>
+    <div class="events-filter">
+      <div class="filter-group">
+        <span class="filter-label">Country</span>
+        <input class="filter-input" type="text" id="evCountry" value="Malaysia" style="width:140px" oninput="renderEvents()">
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Time Window</span>
+        <select class="filter-select" id="evWindow" onchange="renderEvents()">
+          <option value="30">Next 30 days</option>
+          <option value="60" selected>Next 60 days</option>
+          <option value="90">Next 90 days</option>
+          <option value="180">Next 6 months</option>
+          <option value="365">Next 12 months</option>
+        </select>
+      </div>
+    </div>
+    <div id="eventsBody"></div>
+  </div>
+
+  <!-- ── Tab: Stamp Books ── -->
+
+  <div class="tab-panel" id="tab-books">
+    <div class="section-header">
+      <div class="section-title" id="booksTitle">My Stamp Books</div>
+      <div class="section-actions">
+        <button class="btn btn-gold" onclick="openBookModal()">＋ New Book</button>
+      </div>
+    </div>
+    <div class="books-grid" id="booksGrid"></div>
+  </div>
+
+</main>
+
+<!-- ════ MODALS ════ -->
+
+<!-- Stamp Modal -->
+
+<div class="modal-overlay" id="stampModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h2 class="modal-title" id="stampModalTitle">Add Stamp</h2>
+      <button class="modal-close" onclick="closeModal('stampModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group form-col-full">
+          <label class="form-label">Stamp Name *</label>
+          <input class="form-input" type="text" id="fStampName" placeholder="e.g. KL Tower Postal Counter">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Country</label>
+          <input class="form-input" type="text" id="fStampCountry" value="Malaysia">
+        </div>
+        <div class="form-group">
+          <label class="form-label">State</label>
+          <input class="form-input" type="text" id="fStampState" value="KL">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="fStampCategory">
+            <option value="">— Select Category —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-select" id="fStampType" onchange="toggleEventFields()">
+            <option value="Regular">Regular</option>
+            <option value="Event">Event</option>
+          </select>
+        </div>
+        <div class="form-group form-col-full">
+          <label class="form-label">Location / Venue</label>
+          <input class="form-input" type="text" id="fStampLocation" placeholder="e.g. Level 2, Main Post Office">
+        </div>
+        <div class="form-group form-col-full" id="eventFieldsWrap" style="display:none">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Event Start Date</label>
+              <input class="form-input" type="date" id="fStampEventDate">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Event End Date</label>
+              <input class="form-input" type="date" id="fStampEventEndDate">
+            </div>
+          </div>
+        </div>
+        <div class="form-group form-col-full">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="fStampDesc" placeholder="Optional notes about this stamp location…"></textarea>
+        </div>
+        <div class="form-group form-col-full">
+          <label class="form-label">Reference URL</label>
+          <input class="form-input" type="url" id="fStampRef" placeholder="https://…">
+          <span class="form-hint">Stored for reference, not displayed in directory</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('stampModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveStamp()">Save Stamp</button>
+    </div>
+  </div>
+</div>
+
+<!-- Category Modal -->
+
+<div class="modal-overlay" id="catModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="catModalTitle">Add Category</h2>
+      <button class="modal-close" onclick="closeModal('catModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid one-col">
+        <div class="form-group">
+          <label class="form-label">Category Name *</label>
+          <input class="form-input" type="text" id="fCatName" placeholder="e.g. Post Office, Museum">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Created By</label>
+          <input class="form-input" type="text" id="fCatCreatedBy" placeholder="Username">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('catModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCat()">Save Category</button>
+    </div>
+  </div>
+</div>
+
+<!-- Book Modal (Create / Edit metadata) -->
+
+<div class="modal-overlay" id="bookModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="bookModalTitle">New Stamp Book</h2>
+      <button class="modal-close" onclick="closeModal('bookModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid one-col">
+        <div class="form-group">
+          <label class="form-label">Sequence Number</label>
+          <input class="form-input" type="text" id="fBookSeq" placeholder="e.g. 001, A-1, 2024-01">
+          <span class="form-hint">Used to order books in the grid. Enter any value you like.</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Book Name *</label>
+          <input class="form-input" type="text" id="fBookName" placeholder="e.g. Malaysia 2024 Collection">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date Created</label>
+          <input class="form-input" type="date" id="fBookDate">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('bookModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBook()">Save Book</button>
+    </div>
+  </div>
+</div>
+
+<!-- Stamp Selector Modal (Manage stamps in a book) -->
+
+<div class="modal-overlay" id="bookStampsModal">
+  <div class="modal modal-xl">
+    <div class="modal-header">
+      <div>
+        <h2 class="modal-title" id="bookStampsModalTitle">Manage Stamps</h2>
+        <div style="font-size:.78rem;color:var(--mid);margin-top:3px">Includes all stamps — past events and disabled locations</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('bookStampsModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="stamp-selector-filters">
+        <input class="search-input" type="text" id="bsSearch" placeholder="Search stamps…" oninput="renderBookStampSelector()" style="max-width:280px;flex:1">
+        <select class="filter-select" id="bsFilterCat" onchange="renderBookStampSelector()" style="min-width:140px">
+          <option value="">All Categories</option>
+        </select>
+        <select class="filter-select" id="bsFilterType" onchange="renderBookStampSelector()" style="min-width:110px">
+          <option value="">All Types</option>
+          <option value="Regular">Regular</option>
+          <option value="Event">Event</option>
+        </select>
+        <span class="sel-count" id="bsSelCount"><strong>0</strong> selected</span>
+      </div>
+      <div class="stamp-selector-list" id="bookStampSelectorList"></div>
+    </div>
+    <div class="modal-footer">
+      <div style="flex:1;font-size:.82rem;color:var(--mid)" id="bsFooterNote"></div>
+      <button class="btn btn-outline" onclick="closeModal('bookStampsModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBookStamps()">💾 Save Selection</button>
+    </div>
+  </div>
+</div>
+
+<!-- Import / Export Modal -->
+
+<div class="modal-overlay" id="ioModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h2 class="modal-title">⇅ Import / Export</h2>
+      <button class="modal-close" onclick="closeModal('ioModal')">✕</button>
+    </div>
+    <div class="modal-body">
+
+```
+  <!-- EXPORT -->
+  <div class="io-section">
+    <div class="io-section-header">
+      <span style="font-size:1.1rem">📤</span>
+      <span class="io-section-title">Export Data</span>
+    </div>
+    <div class="io-section-body">
+
+      <div class="io-row">
+        <div class="io-row-info">
+          <div class="io-row-label">Full Backup (JSON)</div>
+          <div class="io-row-desc">All stamps, categories, collections and stamp books — use this to back up or migrate data</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="exportJSON()">⬇ Download JSON</button>
+      </div>
+
+      <hr class="io-divider">
+
+      <div class="io-row">
+        <div class="io-row-info">
+          <div class="io-row-label">Stamp Directory (CSV)</div>
+          <div class="io-row-desc">All active stamps in spreadsheet format — open in Excel or Google Sheets</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="exportCSV()">⬇ Download CSV</button>
+      </div>
+
+      <hr class="io-divider">
+
+      <div>
+        <div class="io-row" style="margin-bottom:10px">
+          <div class="io-row-info">
+            <div class="io-row-label">PDF Export by Hunt Category</div>
+            <div class="io-row-desc">Generates a printable stamp list for each category — opens print dialog</div>
+          </div>
+        </div>
+        <div class="cat-pdf-list" id="catPdfList">
+          <div style="font-size:.82rem;color:var(--mid);text-align:center;padding:8px">Loading categories…</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- IMPORT -->
+  <div class="io-section">
+    <div class="io-section-header">
+      <span style="font-size:1.1rem">📥</span>
+      <span class="io-section-title">Import Data</span>
+    </div>
+    <div class="io-section-body">
+      <div class="import-warning">
+        <span style="font-size:1.1rem;flex-shrink:0">⚠️</span>
+        <span>Importing a <strong>V3 backup</strong> replaces stamps, categories, collections and stamp books. Importing a <strong>V2 backup</strong> replaces stamps, categories and collections — your existing stamp books are kept.</span>
+      </div>
+      <div class="io-row">
+        <div class="io-row-info">
+          <div class="io-row-label">Upload JSON Backup</div>
+          <div class="io-row-desc">Accepts V2 or V3 backups — stamps, categories &amp; collections are always preserved</div>
+        </div>
+        <label class="btn btn-outline btn-sm" style="cursor:pointer">
+          📂 Choose File
+          <input type="file" accept=".json,application/json" id="importFileInput" style="display:none" onchange="scanImportFile(event)">
+        </label>
+      </div>
+
+      <!-- Preview panel — shown after file is scanned, hidden otherwise -->
+      <div id="importPreview" style="display:none;margin-top:4px;border:1.5px solid var(--border);border-radius:8px;overflow:hidden">
+        <div style="background:var(--cloud);padding:10px 14px;border-bottom:1.5px solid var(--border);font-size:.78rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.05em">
+          File Contents
+        </div>
+        <div id="importPreviewBody" style="padding:12px 14px;font-size:.85rem;display:flex;flex-direction:column;gap:6px"></div>
+        <div style="padding:10px 14px;border-top:1.5px solid var(--border);display:flex;gap:8px;align-items:center">
+          <button class="btn btn-primary btn-sm" id="importExecuteBtn" onclick="executeImport()">⬆ Import Now</button>
+          <button class="btn btn-ghost btn-sm" onclick="cancelImportPreview()">Cancel</button>
+          <span id="importPreviewWarning" style="font-size:.76rem;color:var(--red)"></span>
+        </div>
+      </div>
+
+      <div id="importStatus" style="font-size:.82rem;margin-top:4px"></div>
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button class="btn btn-outline" onclick="closeModal('ioModal')">Close</button>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <h2 class="modal-title">Confirm Delete</h2>
+      <button class="modal-close" onclick="closeModal('confirmModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="confirmMsg" style="font-size:.92rem;color:var(--mid)"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="btn btn-danger" id="confirmOkBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+
+<div class="toast" id="toast"></div>
+
+<!-- ════ SCRIPT ════ -->
+
+<script>
+// ── Standalone: all data in localStorage, no server required ──────────────────
+
+const USERS = [
+  { id: 'ymlee.admin', label: 'ymlee.admin', initials: 'YM', cls: 'ymlee',  isAdmin: true  },
+  { id: 'calvin.lee',  label: 'calvin.lee',  initials: 'CL', cls: 'calvin', isAdmin: false },
+];
+
+// ── UUID ──────────────────────────────────────────────────────────────────────
+function uuidv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
+}
+
+// ── localStorage layer ────────────────────────────────────────────────────────
+const STORE_KEY = 'souvenir-stamps-v3';
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return { stamps: [], categories: [], collections: {}, stampBooks: {} };
+    const d = JSON.parse(raw);
+    return {
+      stamps:      Array.isArray(d.stamps)     ? d.stamps     : [],
+      categories:  Array.isArray(d.categories) ? d.categories : [],
+      collections: d.collections || {},
+      stampBooks:  d.stampBooks  || {},
+    };
+  } catch(e) {
+    return { stamps: [], categories: [], collections: {}, stampBooks: {} };
+  }
+}
+
+function saveToStorage(data) {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); }
+  catch(e) { showToast('Storage may be full — data not saved', 'error'); }
+}
+
+// ── App state ─────────────────────────────────────────────────────────────────
+const state = {
+  currentUser:  'ymlee.admin',
+  stamps:       [],
+  categories:   [],
+  myCollection: [],
+  myBooks:      [],
+  currentTab:   'directory',
+  editStampId:  null,
+  editCatId:    null,
+  editBookId:   null,
+  bsBookId:     null,
+  bsSelected:   new Set(),
+};
+
+// ── Bootstrap ─────────────────────────────────────────────────────────────────
+window.addEventListener('click', e => {
+  const dd  = document.getElementById('userDropdown');
+  const btn = document.getElementById('userSelectorBtn');
+  if (btn && !btn.contains(e.target) && !dd.contains(e.target)) dd.classList.remove('open');
+});
+
+function sortBooks(books) {
+  return [...books].sort((a, b) =>
+    String(a.sequenceNumber).localeCompare(String(b.sequenceNumber), undefined, { numeric: true }));
+}
+
+function init() {
+  const d = loadFromStorage();
+  state.stamps       = d.stamps;
+  state.categories   = d.categories;
+  state.myCollection = d.collections[state.currentUser] || [];
+  state.myBooks      = sortBooks(d.stampBooks[state.currentUser] || []);
+  renderAll();
+}
+
+// ── Sync load helpers ─────────────────────────────────────────────────────────
+function loadStamps()     { state.stamps       = loadFromStorage().stamps; }
+function loadCategories() { state.categories   = loadFromStorage().categories; }
+function loadCollection() { state.myCollection = loadFromStorage().collections[state.currentUser] || []; }
+function loadBooks()      { state.myBooks       = sortBooks(loadFromStorage().stampBooks[state.currentUser] || []); }
+
+// ── Render all ────────────────────────────────────────────────────────────────
+function renderAll() {
+  renderDirectory();
+  renderCollection();
+  renderCategories();
+  renderEvents();
+  renderBooks();
+  updateCounts();
+  populateCategorySelects();
+}
+
+function updateCounts() {
+  const active = state.stamps.filter(s => !s.isDisabled);
+  document.getElementById('cnt-directory').textContent  = active.length;
+  document.getElementById('cnt-collection').textContent = state.myCollection.length;
+  document.getElementById('cnt-categories').textContent = state.categories.length;
+  document.getElementById('cnt-books').textContent      = state.myBooks.length;
+
+  const today    = todayStr();
+  const win60    = datePlusDays(today, 60);
+  const evCtry   = (document.getElementById('evCountry')?.value || 'malaysia').toLowerCase();
+  const evCount  = state.stamps.filter(s => {
+    if (!s.isEvent || s.isDisabled) return false;
+    if (evCtry && (s.country||'').toLowerCase() !== evCtry) return false;
+    const end = s.eventEndDate || s.eventDate || '';
+    return end >= today && (s.eventDate||'') <= win60;
+  }).length;
+  document.getElementById('cnt-events').textContent = evCount;
+}
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  state.currentTab = tab;
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelector('.tab-btn[data-tab="' + tab + '"]').classList.add('active');
+}
+
+// ── User switching ────────────────────────────────────────────────────────────
+function toggleUserDropdown() {
+  document.getElementById('userDropdown').classList.toggle('open');
+}
+
+function switchUser(uid) {
+  state.currentUser = uid;
+  const u = USERS.find(x => x.id === uid);
+  const dot = document.getElementById('headerDot');
+  dot.textContent = u.initials;
+  dot.className   = 'user-dot ' + u.cls;
+  document.getElementById('headerName').textContent = u.label;
+  document.querySelectorAll('.user-dropdown-item').forEach(el =>
+    el.classList.toggle('active', el.dataset.user === uid));
+  document.getElementById('userDropdown').classList.remove('open');
+  document.querySelectorAll('#adminActions').forEach(el =>
+    el.style.display = u.isAdmin ? '' : 'none');
+  loadCollection();
+  loadBooks();
+  renderCollection();
+  renderBooks();
+  updateCounts();
+}
+
+// ── Directory ─────────────────────────────────────────────────────────────────
+function renderDirectory() {
+  const q      = (document.getElementById('dirSearch').value || '').toLowerCase();
+  const cat    = document.getElementById('dirFilterCat').value;
+  const type   = document.getElementById('dirFilterType').value;
+  const status = document.getElementById('dirFilterStatus').value;
+
+  const filtered = state.stamps.filter(s => {
+    if (status === 'active'   &&  s.isDisabled) return false;
+    if (status === 'disabled' && !s.isDisabled) return false;
+    if (cat  && s.category !== cat) return false;
+    if (type === 'Regular' &&  s.isEvent) return false;
+    if (type === 'Event'   && !s.isEvent) return false;
+    if (q) {
+      const hay = (s.name+' '+s.country+' '+s.state+' '+s.location+' '+s.description).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const isAdmin = USERS.find(u => u.id === state.currentUser)?.isAdmin;
+  const tbody   = document.getElementById('directoryBody');
+
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">🔍</div><h3>No stamps found</h3><p>Try adjusting your filters</p></div></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(s => {
+    const col  = state.myCollection.includes(s.id);
+    const tb   = s.isEvent
+      ? '<span class="badge badge-event">Event</span>'
+      : '<span class="badge badge-regular">Regular</span>';
+    const db   = s.isDisabled ? '<span class="badge badge-disabled">Disabled</span>' : '';
+    const cb   = col          ? '<span class="badge badge-collected">✓ Collected</span>' : '';
+    const acts = isAdmin
+      ? '<button class="btn-icon" onclick="openStampModal(\'' + s.id + '\')" title="Edit">✏️</button>'
+        + (!s.isDisabled ? '<button class="btn-icon danger" onclick="disableStamp(\'' + s.id + '\')" title="Disable">🗑️</button>' : '')
+      : '';
+    return '<tr class="' + (s.isDisabled ? 'disabled' : '') + '">'
+      + '<td><strong>' + esc(s.name) + '</strong> ' + cb + '</td>'
+      + '<td>' + esc(s.country) + (s.state ? ' · ' + esc(s.state) : '') + '</td>'
+      + '<td>' + esc(s.category) + '</td>'
+      + '<td>' + tb + ' ' + db + '</td>'
+      + '<td>' + esc(s.location) + '</td>'
+      + '<td style="white-space:nowrap;color:var(--mid);font-size:.78rem">' + (s.dateAdded||'') + '</td>'
+      + '<td style="text-align:right;white-space:nowrap">' + acts + '</td>'
+      + '</tr>';
+  }).join('');
+}
+
+// ── My Collection ─────────────────────────────────────────────────────────────
+function renderCollection() {
+  const u = USERS.find(x => x.id === state.currentUser);
+  document.getElementById('collectionTitle').textContent = u.label + "'s Collection";
+
+  const q      = (document.getElementById('colSearch').value || '').toLowerCase();
+  const filter = document.getElementById('colFilter').value;
+
+  const stamps = state.stamps.filter(s => {
+    if (s.isDisabled) return false;
+    const col = state.myCollection.includes(s.id);
+    if (filter === 'collected'     && !col) return false;
+    if (filter === 'not-collected' &&  col) return false;
+    if (q) {
+      const hay = (s.name+' '+s.country+' '+s.state+' '+s.category).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const total = state.stamps.filter(s => !s.isDisabled).length;
+  document.getElementById('collectionStats').textContent =
+    state.myCollection.length + ' / ' + total + ' collected';
+
+  const grid = document.getElementById('collectionGrid');
+  if (!stamps.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⭐</div><h3>Nothing here</h3><p>Tap a stamp to toggle collected status</p></div>';
+    return;
+  }
+  grid.innerHTML = stamps.map(s => {
+    const col = state.myCollection.includes(s.id);
+    return '<div class="collection-item ' + (col ? 'collected' : '') + '" onclick="toggleCollected(\'' + s.id + '\')">'
+      + '<div class="collection-check">' + (col ? '✓' : '') + '</div>'
+      + '<div class="ci-name">' + esc(s.name) + '</div>'
+      + '<div class="ci-meta">' + esc(s.country) + (s.state ? ' · ' + esc(s.state) : '') + '</div>'
+      + (s.category ? '<div class="ci-meta" style="margin-top:2px">' + esc(s.category) + '</div>' : '')
+      + '</div>';
+  }).join('');
+}
+
+function toggleCollected(stampId) {
+  const idx = state.myCollection.indexOf(stampId);
+  if (idx >= 0) state.myCollection.splice(idx, 1);
+  else           state.myCollection.push(stampId);
+  const d = loadFromStorage();
+  d.collections[state.currentUser] = state.myCollection;
+  saveToStorage(d);
+  renderCollection();
+  updateCounts();
+}
+
+// ── Hunt Categories ───────────────────────────────────────────────────────────
+function renderCategories() {
+  const grid = document.getElementById('catGrid');
+  if (!state.categories.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🏷️</div><h3>No categories yet</h3><p>Add hunt categories to organise your stamps</p></div>';
+    return;
+  }
+  grid.innerHTML = state.categories.map(c => {
+    const n = state.stamps.filter(s => s.category === c.name && !s.isDisabled).length;
+    return '<div class="cat-card">'
+      + '<div class="cat-card-top"><span class="cat-name">' + esc(c.name) + '</span>'
+      + '<div class="cat-actions">'
+      + '<button class="btn-icon" onclick="openCatModal(\'' + c.id + '\')" title="Edit">✏️</button>'
+      + '<button class="btn-icon danger" onclick="deleteCat(\'' + c.id + '\',\'' + esc(c.name) + '\')" title="Delete">🗑️</button>'
+      + '</div></div>'
+      + '<div class="cat-body">'
+      + '<span>📌 <strong>' + n + '</strong> active stamps</span>'
+      + (c.createdBy   ? '<span>👤 ' + esc(c.createdBy) + '</span>'   : '')
+      + (c.dateCreated ? '<span>📅 ' + c.dateCreated + '</span>'       : '')
+      + '</div></div>';
+  }).join('');
+}
+
+// ── Upcoming Events ───────────────────────────────────────────────────────────
+function renderEvents() {
+  const country = (document.getElementById('evCountry').value || '').toLowerCase().trim();
+  const winDays = parseInt(document.getElementById('evWindow').value) || 60;
+  const today   = todayStr();
+  const limit   = datePlusDays(today, winDays);
+
+  const events = state.stamps.filter(s => {
+    if (!s.isEvent) return false;
+    if (country && (s.country||'').toLowerCase() !== country) return false;
+    const start = s.eventDate || '';
+    const end   = s.eventEndDate || start;
+    return end >= today && start <= limit;
+  }).sort((a, b) => (a.eventDate||'').localeCompare(b.eventDate||''));
+
+  updateCounts();
+  const body = document.getElementById('eventsBody');
+  if (!events.length) {
+    body.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><h3>No upcoming events</h3><p>No events found for the selected filters</p></div>';
+    return;
+  }
+  body.innerHTML = events.map(s => {
+    const d     = s.eventDate ? new Date(s.eventDate + 'T00:00:00') : null;
+    const month = d ? d.toLocaleString('en', { month: 'short' }).toUpperCase() : '—';
+    const day   = d ? d.getDate() : '—';
+    const end   = s.eventEndDate && s.eventEndDate !== s.eventDate ? ' → ' + s.eventEndDate : '';
+    return '<div class="event-card">'
+      + '<div class="event-date-badge"><div class="month">' + month + '</div><div class="day">' + day + '</div></div>'
+      + '<div class="event-info">'
+      + '<div class="event-name">' + esc(s.name) + '</div>'
+      + '<div class="event-meta">'
+      + '<span>📍 ' + esc(s.country) + (s.state ? ' · ' + esc(s.state) : '') + '</span>'
+      + (s.location ? '<span>🏢 ' + esc(s.location) + '</span>' : '')
+      + '<span>📅 ' + (s.eventDate||'') + end + '</span>'
+      + (s.category ? '<span>🏷️ ' + esc(s.category) + '</span>' : '')
+      + '</div></div></div>';
+  }).join('');
+}
+
+// ── Stamp Books ───────────────────────────────────────────────────────────────
+function renderBooks() {
+  const u = USERS.find(x => x.id === state.currentUser);
+  document.getElementById('booksTitle').textContent = u.label + "'s Stamp Books";
+
+  const grid = document.getElementById('booksGrid');
+  if (!state.myBooks.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📖</div><h3>No stamp books yet</h3><p>Create a book to organise your stamp collections</p></div>';
+    return;
+  }
+  grid.innerHTML = state.myBooks.map(book => {
+    const count = (book.stampIds || []).length;
+    return '<div class="book-card">'
+      + '<div class="book-card-top">'
+      + (book.sequenceNumber ? '<div class="book-seq"># ' + esc(book.sequenceNumber) + '</div>' : '')
+      + '<div class="book-icon">📖</div>'
+      + '<div class="book-name">' + esc(book.bookName) + '</div>'
+      + (book.dateCreated ? '<div class="book-date">Created ' + formatDate(book.dateCreated) + '</div>' : '')
+      + '</div>'
+      + '<div class="book-card-body">'
+      + '<div class="book-stamp-count"><span>🏷️</span><strong>' + count + '</strong><span>stamp' + (count!==1?'s':'') + ' in this book</span></div>'
+      + '<div class="book-actions">'
+      + '<button class="btn btn-outline btn-sm" onclick="openBookModal(\'' + book.id + '\')">✏️ Edit</button>'
+      + '<button class="btn btn-primary btn-sm" onclick="openBookStampsModal(\'' + book.id + '\')">📋 Stamps</button>'
+      + '<button class="btn-icon danger" onclick="deleteBook(\'' + book.id + '\',\'' + esc(book.bookName) + '\')" style="flex-shrink:0">🗑️</button>'
+      + '</div></div></div>';
+  }).join('');
+}
+
+// ── Book modal ────────────────────────────────────────────────────────────────
+function openBookModal(bookId) {
+  state.editBookId = bookId || null;
+  const book = bookId ? state.myBooks.find(b => b.id === bookId) : null;
+  document.getElementById('bookModalTitle').textContent = book ? 'Edit Stamp Book' : 'New Stamp Book';
+  document.getElementById('fBookSeq').value  = book ? (book.sequenceNumber || '') : '';
+  document.getElementById('fBookName').value = book ? (book.bookName || '') : '';
+  document.getElementById('fBookDate').value = book ? (book.dateCreated || todayStr()) : todayStr();
+  openModal('bookModal');
+}
+
+function saveBook() {
+  const seq  = document.getElementById('fBookSeq').value.trim();
+  const name = document.getElementById('fBookName').value.trim();
+  const date = document.getElementById('fBookDate').value;
+  if (!name) { showToast('Please enter a book name', 'error'); return; }
+
+  const d = loadFromStorage();
+  if (!d.stampBooks[state.currentUser]) d.stampBooks[state.currentUser] = [];
+  const books = d.stampBooks[state.currentUser];
+
+  if (state.editBookId) {
+    const idx = books.findIndex(b => b.id === state.editBookId);
+    if (idx >= 0) books[idx] = { ...books[idx], sequenceNumber: seq, bookName: name, dateCreated: date };
+    showToast('Book updated ✓', 'success');
+  } else {
+    books.push({ id: uuidv4(), sequenceNumber: seq, bookName: name, dateCreated: date, stampIds: [] });
+    showToast('Book created ✓', 'success');
+  }
+  saveToStorage(d);
+  loadBooks();
+  closeModal('bookModal');
+  renderBooks();
+  updateCounts();
+}
+
+function deleteBook(bookId, name) {
+  confirm2('Delete stamp book "' + name + '"? The stamps themselves will not be affected.', () => {
+    const d = loadFromStorage();
+    d.stampBooks[state.currentUser] = (d.stampBooks[state.currentUser] || []).filter(b => b.id !== bookId);
+    saveToStorage(d);
+    loadBooks();
+    renderBooks();
+    updateCounts();
+    showToast('Book deleted', 'success');
+  });
+}
+
+// ── Book stamps modal ─────────────────────────────────────────────────────────
+function openBookStampsModal(bookId) {
+  state.bsBookId = bookId;
+  const book = state.myBooks.find(b => b.id === bookId);
+  if (!book) return;
+  document.getElementById('bookStampsModalTitle').textContent = 'Stamps in "' + book.bookName + '"';
+  state.bsSelected = new Set(book.stampIds || []);
+
+  const catSel = document.getElementById('bsFilterCat');
+  catSel.innerHTML = '<option value="">All Categories</option>'
+    + state.categories.map(c => '<option value="' + esc(c.name) + '">' + esc(c.name) + '</option>').join('');
+  document.getElementById('bsSearch').value = '';
+  document.getElementById('bsFilterType').value = '';
+
+  renderBookStampSelector();
+  openModal('bookStampsModal');
+}
+
+function renderBookStampSelector() {
+  const q    = (document.getElementById('bsSearch').value || '').toLowerCase();
+  const cat  = document.getElementById('bsFilterCat').value;
+  const type = document.getElementById('bsFilterType').value;
+  const today = todayStr();
+
+  const stamps = state.stamps.filter(s => {
+    if (cat  && s.category !== cat) return false;
+    if (type === 'Regular' &&  s.isEvent) return false;
+    if (type === 'Event'   && !s.isEvent) return false;
+    if (q) {
+      const hay = (s.name+' '+s.country+' '+s.state+' '+s.location+' '+s.category).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  stamps.sort((a, b) => {
+    const as = state.bsSelected.has(a.id) ? 0 : 1;
+    const bs = state.bsSelected.has(b.id) ? 0 : 1;
+    return as !== bs ? as - bs : a.name.localeCompare(b.name);
+  });
+
+  document.getElementById('bsSelCount').innerHTML = '<strong>' + state.bsSelected.size + '</strong> selected';
+
+  const list = document.getElementById('bookStampSelectorList');
+  if (!stamps.length) {
+    list.innerHTML = '<div style="padding:32px;text-align:center;color:var(--mid)">No stamps match your filters</div>';
+    return;
+  }
+  list.innerHTML = stamps.map(s => {
+    const sel  = state.bsSelected.has(s.id);
+    const tags = [];
+    if (s.isDisabled) tags.push('<span class="badge badge-disabled">Disabled</span>');
+    if (s.isEvent) {
+      const end  = s.eventEndDate || s.eventDate || '';
+      tags.push(end && end < today
+        ? '<span class="badge badge-past">Past Event</span>'
+        : '<span class="badge badge-event">Event</span>');
+    }
+    const dl = s.isEvent && s.eventDate
+      ? s.eventDate + (s.eventEndDate && s.eventEndDate !== s.eventDate ? ' → ' + s.eventEndDate : '')
+      : (s.dateAdded || '');
+    return '<div class="stamp-selector-item ' + (sel ? 'selected' : '') + '" onclick="toggleBsStamp(\'' + s.id + '\')">'
+      + '<input type="checkbox" ' + (sel ? 'checked' : '') + ' onclick="event.stopPropagation();toggleBsStamp(\'' + s.id + '\')">'
+      + '<div class="ssi-info">'
+      + '<div class="ssi-name">' + esc(s.name) + '</div>'
+      + '<div class="ssi-meta">'
+      + '<span>' + esc(s.country) + (s.state ? ' · '+esc(s.state) : '') + '</span>'
+      + (s.category ? '<span>🏷️ ' + esc(s.category) + '</span>' : '')
+      + (s.location ? '<span>📍 ' + esc(s.location) + '</span>' : '')
+      + (dl         ? '<span>📅 ' + dl + '</span>'               : '')
+      + '</div></div>'
+      + '<div class="ssi-tags">' + tags.join('') + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function toggleBsStamp(stampId) {
+  if (state.bsSelected.has(stampId)) state.bsSelected.delete(stampId);
+  else state.bsSelected.add(stampId);
+  renderBookStampSelector();
+}
+
+function saveBookStamps() {
+  const stampIds = [...state.bsSelected];
+  const d = loadFromStorage();
+  const books = d.stampBooks[state.currentUser] || [];
+  const idx   = books.findIndex(b => b.id === state.bsBookId);
+  if (idx >= 0) books[idx].stampIds = stampIds;
+  d.stampBooks[state.currentUser] = books;
+  saveToStorage(d);
+  loadBooks();
+  closeModal('bookStampsModal');
+  renderBooks();
+  showToast('Saved ' + stampIds.length + ' stamp' + (stampIds.length!==1?'s':'') + ' ✓', 'success');
+}
+
+// ── Stamp modal ───────────────────────────────────────────────────────────────
+function openStampModal(stampId) {
+  state.editStampId = stampId || null;
+  const s = stampId ? state.stamps.find(x => x.id === stampId) : null;
+  document.getElementById('stampModalTitle').textContent = s ? 'Edit Stamp' : 'Add Stamp';
+  document.getElementById('fStampName').value        = s ? s.name        : '';
+  document.getElementById('fStampCountry').value     = s ? s.country     : 'Malaysia';
+  document.getElementById('fStampState').value       = s ? s.state       : 'KL';
+  document.getElementById('fStampLocation').value    = s ? (s.location    || '') : '';
+  document.getElementById('fStampDesc').value        = s ? (s.description || '') : '';
+  document.getElementById('fStampRef').value         = s ? (s.referenceUrl|| '') : '';
+  document.getElementById('fStampType').value        = s ? (s.isEvent ? 'Event' : 'Regular') : 'Regular';
+  document.getElementById('fStampEventDate').value    = s ? (s.eventDate    || '') : '';
+  document.getElementById('fStampEventEndDate').value = s ? (s.eventEndDate || '') : '';
+
+  const catSel = document.getElementById('fStampCategory');
+  catSel.innerHTML = '<option value="">— Select Category —</option>'
+    + state.categories.map(c => '<option value="' + esc(c.name) + '">' + esc(c.name) + '</option>').join('');
+  catSel.value = s ? (s.category || '') : '';
+
+  toggleEventFields();
+  openModal('stampModal');
+}
+
+function toggleEventFields() {
+  document.getElementById('eventFieldsWrap').style.display =
+    document.getElementById('fStampType').value === 'Event' ? '' : 'none';
+}
+
+function saveStamp() {
+  const name = document.getElementById('fStampName').value.trim();
+  if (!name) { showToast('Please enter a stamp name', 'error'); return; }
+  const isEvent = document.getElementById('fStampType').value === 'Event';
+
+  const payload = {
+    name,
+    country:      document.getElementById('fStampCountry').value.trim(),
+    state:        document.getElementById('fStampState').value.trim(),
+    category:     document.getElementById('fStampCategory').value,
+    type:         document.getElementById('fStampType').value,
+    location:     document.getElementById('fStampLocation').value.trim(),
+    description:  document.getElementById('fStampDesc').value.trim(),
+    referenceUrl: document.getElementById('fStampRef').value.trim(),
+    isEvent,
+    eventDate:    isEvent ? document.getElementById('fStampEventDate').value : '',
+    eventEndDate: isEvent ? document.getElementById('fStampEventEndDate').value : '',
+  };
+
+  const d = loadFromStorage();
+  if (state.editStampId) {
+    const idx = d.stamps.findIndex(s => s.id === state.editStampId);
+    if (idx >= 0) d.stamps[idx] = { ...d.stamps[idx], ...payload, id: state.editStampId };
+    showToast('Stamp updated ✓', 'success');
+  } else {
+    d.stamps.push({ id: uuidv4(), ...payload, isDisabled: false, dateAdded: todayStr() });
+    showToast('Stamp added ✓', 'success');
+  }
+  saveToStorage(d);
+  loadStamps();
+  closeModal('stampModal');
+  renderAll();
+}
+
+function disableStamp(stampId) {
+  const s = state.stamps.find(x => x.id === stampId);
+  confirm2('Disable "' + s.name + '"? It remains visible in Stamp Books and can be filtered back in Directory.', () => {
+    const d = loadFromStorage();
+    const idx = d.stamps.findIndex(x => x.id === stampId);
+    if (idx >= 0) d.stamps[idx].isDisabled = true;
+    saveToStorage(d);
+    loadStamps();
+    renderAll();
+    showToast('Stamp disabled', 'success');
+  });
+}
+
+// ── Category modal ────────────────────────────────────────────────────────────
+function openCatModal(catId) {
+  state.editCatId = catId || null;
+  const c = catId ? state.categories.find(x => x.id === catId) : null;
+  document.getElementById('catModalTitle').textContent = c ? 'Edit Category' : 'Add Category';
+  document.getElementById('fCatName').value      = c ? c.name : '';
+  document.getElementById('fCatCreatedBy').value = c ? (c.createdBy || '') : state.currentUser;
+  openModal('catModal');
+}
+
+function saveCat() {
+  const name = document.getElementById('fCatName').value.trim();
+  if (!name) { showToast('Please enter a category name', 'error'); return; }
+  const payload = { name, createdBy: document.getElementById('fCatCreatedBy').value.trim() };
+
+  const d = loadFromStorage();
+  if (state.editCatId) {
+    const idx = d.categories.findIndex(c => c.id === state.editCatId);
+    if (idx >= 0) d.categories[idx] = { ...d.categories[idx], ...payload, id: state.editCatId };
+    showToast('Category updated ✓', 'success');
+  } else {
+    d.categories.push({ id: uuidv4(), ...payload, dateCreated: todayStr() });
+    showToast('Category added ✓', 'success');
+  }
+  saveToStorage(d);
+  loadCategories();
+  closeModal('catModal');
+  populateCategorySelects();
+  renderCategories();
+  updateCounts();
+}
+
+function deleteCat(catId, name) {
+  confirm2('Delete category "' + name + '"? Stamps using this category will not be changed.', () => {
+    const d = loadFromStorage();
+    d.categories = d.categories.filter(c => c.id !== catId);
+    saveToStorage(d);
+    loadCategories();
+    populateCategorySelects();
+    renderCategories();
+    updateCounts();
+    showToast('Category deleted', 'success');
+  });
+}
+
+// ── Import / Export ───────────────────────────────────────────────────────────
+function openIoModal() {
+  renderCatPdfList();
+  _pendingImport = null;
+  document.getElementById('importPreview').style.display = 'none';
+  document.getElementById('importStatus').textContent    = '';
+  document.getElementById('importFileInput').value       = '';
+  openModal('ioModal');
+}
+
+function renderCatPdfList() {
+  const list = document.getElementById('catPdfList');
+  if (!state.categories.length) {
+    list.innerHTML = '<div style="font-size:.82rem;color:var(--mid);text-align:center;padding:8px">No categories defined yet</div>';
+    return;
+  }
+  list.innerHTML = state.categories.map(c => {
+    const n = state.stamps.filter(s => s.category === c.name).length;
+    return '<div class="cat-pdf-row">'
+      + '<div><div class="cat-pdf-name">' + esc(c.name) + '</div>'
+      + '<div class="cat-pdf-count">' + n + ' stamp' + (n!==1?'s':'') + ' (including disabled &amp; past events)</div></div>'
+      + '<button class="btn btn-outline btn-sm" onclick="exportCategoryPDF(\'' + c.id + '\')">🖨️ Print PDF</button>'
+      + '</div>';
+  }).join('');
+}
+
+function exportJSON() {
+  const data = loadFromStorage();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  downloadBlob(blob, 'stamps-v3-backup-' + todayStr() + '.json');
+  showToast('JSON backup downloaded ✓', 'success');
+}
+
+function exportCSV() {
+  const data = loadFromStorage();
+  const headers = ['Name','Country','State','Category','Type','Location','Event Date','Event End Date','Date Added','Status'];
+  const rows = data.stamps.map(s => [
+    s.name||'', s.country||'', s.state||'', s.category||'',
+    s.isEvent?'Event':'Regular', s.location||'',
+    s.eventDate||'', s.eventEndDate||'', s.dateAdded||'',
+    s.isDisabled?'Disabled':'Active',
+  ]);
+  const csv = [headers, ...rows]
+    .map(r => r.map(v => '"' + String(v).replace(/"/g,'""') + '"').join(',')).join('\r\n');
+  downloadBlob(new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'}), 'stamp-directory-' + todayStr() + '.csv');
+  showToast('CSV downloaded ✓', 'success');
+}
+
+function exportCategoryPDF(catId) {
+  const cat = state.categories.find(c => c.id === catId);
+  if (!cat) return;
+  const stamps = state.stamps.filter(s => s.category === cat.name).sort((a,b) => a.name.localeCompare(b.name));
+  const today  = todayStr();
+
+  const rows = stamps.map((s, i) => {
+    const status = s.isDisabled ? '(Disabled)'
+      : (s.isEvent && (s.eventEndDate||s.eventDate||'') < today ? '(Past Event)'
+      : (s.isEvent ? 'Event' : 'Active'));
+    const dl = s.isEvent ? (s.eventDate||'') + (s.eventEndDate && s.eventEndDate!==s.eventDate ? ' → '+s.eventEndDate : '') : '';
+    const bg = i%2===0 ? '#f8f9fa' : '#fff';
+    return '<tr style="background:'+bg+'">'
+      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+(i+1)+'</td>'
+      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px;font-weight:600">'+esc(s.name)+'</td>'
+      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+esc(s.country)+(s.state?' · '+esc(s.state):'')+'</td>'
+      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+esc(s.location||'')+'</td>'
+      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+dl+'</td>'
+      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px;color:'+(s.isDisabled?'#999':(s.isEvent?'#D48B10':'#27AE60'))+'">'+status+'</td>'
+      + '</tr>';
+  }).join('');
+
+  const colIds = new Set(state.myCollection);
+  const chkRows = stamps.map((s, i) => {
+    const bg = i%2===0 ? '#f8f9fa' : '#fff';
+    return '<tr style="background:'+bg+'">'
+      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px;text-align:center">'+(colIds.has(s.id)?'✓':'')+'</td>'
+      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+esc(s.name)+'</td>'
+      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+esc(s.country)+(s.state?' · '+esc(s.state):'')+'</td>'
+      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+esc(s.location||'')+'</td>'
+      + '</tr>';
+  }).join('');
+
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+esc(cat.name)+' — Souvenir Stamps</title>'
+    + '<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">'
+    + '<style>body{font-family:\'Figtree\',sans-serif;margin:0;padding:32px 40px;color:#2C3E50}'
+    + 'h1{font-family:\'DM Serif Display\',serif;font-size:28px;margin-bottom:4px}'
+    + '.sub{font-size:13px;color:#5D6D7E;margin-bottom:24px}'
+    + 'h2{font-family:\'DM Serif Display\',serif;font-size:18px;color:#3070B8;margin:28px 0 10px;border-bottom:2px solid #E0E6ED;padding-bottom:6px}'
+    + 'table{width:100%;border-collapse:collapse}'
+    + 'th{background:#4A90D9;color:#fff;padding:9px 10px;text-align:left;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}'
+    + '.footer{margin-top:32px;font-size:11px;color:#BDC3C7;border-top:1px solid #E0E6ED;padding-top:10px}'
+    + '@media print{body{padding:20px 24px}}</style></head><body>'
+
+```
++ '<h1>'+esc(cat.name)+'</h1>'
++ '<div class="sub">Souvenir Stamps · Hunt Category Report &nbsp;·&nbsp; Generated '
++ new Date().toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric'})
++ ' &nbsp;·&nbsp; '+stamps.length+' stamp'+(stamps.length!==1?'s':'')+' total'
++ (cat.createdBy ? ' &nbsp;·&nbsp; Created by '+esc(cat.createdBy) : '')+'</div>'
++ '<h2>Full Stamp List</h2>'
++ '<table><thead><tr><th style="width:36px">#</th><th>Stamp Name</th><th>Country / State</th><th>Location</th><th>Event Dates</th><th>Status</th></tr></thead><tbody>'+rows+'</tbody></table>'
++ '<h2>Collection Checklist — '+esc(state.currentUser)+'</h2>'
++ '<table><thead><tr><th style="width:40px;text-align:center">✓</th><th>Stamp Name</th><th>Country / State</th><th>Location</th></tr></thead><tbody>'+chkRows+'</tbody></table>'
++ '<div class="footer">Souvenir Stamps v3 Standalone · Exported by '+esc(state.currentUser)+'</div>'
++ '<script>window.onload=function(){window.print();}<\/script>'
++ '</body></html>';
+```
+
+const win = window.open(’’, ‘_blank’);
+win.document.write(html);
+win.document.close();
+}
+
+// ── Import: two-step (scan → preview → execute) ───────────────────────────────
+
+// Step 1: read the file and show a preview — no confirm dialog needed
+let _pendingImport = null; // holds parsed data between scan and execute
+
+async function scanImportFile(event) {
+const file = event.target.files[0];
+if (!file) return;
+
+const statusEl  = document.getElementById(‘importStatus’);
+const previewEl = document.getElementById(‘importPreview’);
+const bodyEl    = document.getElementById(‘importPreviewBody’);
+const warnEl    = document.getElementById(‘importPreviewWarning’);
+
+statusEl.textContent  = ‘’;
+previewEl.style.display = ‘none’;
+_pendingImport = null;
+
+try {
+const text     = await file.text();
+const incoming = JSON.parse(text);
+
+```
+if (!incoming || !Array.isArray(incoming.stamps)) {
+  statusEl.style.color   = 'var(--red)';
+  statusEl.textContent   = '✗ Not a valid Souvenir Stamps backup file (missing stamps array).';
+  document.getElementById('importFileInput').value = '';
+  return;
+}
+
+// Detect version
+const isV2 = incoming.stampBooks === undefined;
+const ver  = isV2 ? 'V2' : 'V3';
+
+// Count what's in the file
+const totalStamps   = incoming.stamps.length;
+const eventStamps   = incoming.stamps.filter(s => !!s.isEvent).length;
+const disabledStamps= incoming.stamps.filter(s => !!s.isDisabled).length;
+const activeStamps  = totalStamps - disabledStamps;
+const totalCats     = (incoming.categories || []).length;
+const colUsers      = Object.keys(incoming.collections || {});
+const bkUsers       = Object.keys(incoming.stampBooks  || {});
+
+// Build preview rows
+const row = (icon, label, value, highlight) =>
+  '<div style="display:flex;gap:8px;align-items:baseline">'
+  + '<span style="width:20px;text-align:center">' + icon + '</span>'
+  + '<span style="color:var(--mid);font-size:.82rem;flex:1">' + label + '</span>'
+  + '<strong style="color:' + (highlight||'var(--dark)') + '">' + value + '</strong>'
+  + '</div>';
+
+bodyEl.innerHTML =
+  '<div style="font-size:.78rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Detected: Souvenir Stamps ' + ver + ' backup — "' + file.name + '"</div>'
+  + row('🏷️', 'Total stamps',            totalStamps)
+  + row('✅', 'Active stamps',            activeStamps,  'var(--green)')
+  + row('🚫', 'Disabled stamps',          disabledStamps, disabledStamps > 0 ? 'var(--mid)' : 'var(--light)')
+  + row('📅', 'Event-type stamps',        eventStamps,    eventStamps    > 0 ? 'var(--gold-dk)' : 'var(--light)')
+  + row('🗂️', 'Hunt categories',          totalCats,      totalCats      > 0 ? 'var(--sky)' : 'var(--red)')
+  + row('👤', 'Collections (users)',       colUsers.length > 0 ? colUsers.join(', ') : 'none', colUsers.length > 0 ? 'var(--dark)' : 'var(--light)')
+  + (isV2 ? '<div style="font-size:.76rem;color:var(--mid);margin-top:4px">ℹ️ V2 backup — your existing Stamp Books will be kept.</div>' :
+            '<div style="font-size:.76rem;color:var(--mid);margin-top:4px">Stamp books for: ' + (bkUsers.length ? bkUsers.join(', ') : 'none') + '</div>');
+
+warnEl.textContent = totalCats === 0 ? '⚠️ File has no categories' : '';
+
+// Stash parsed data for executeImport
+_pendingImport = { incoming, isV2, ver, file: file.name };
+previewEl.style.display = '';
+```
+
+} catch(e) {
+statusEl.style.color   = ‘var(–red)’;
+statusEl.textContent   = ’✗ Could not read file: ’ + (e.message || ‘JSON parse error’);
+document.getElementById(‘importFileInput’).value = ‘’;
+}
+}
+
+function cancelImportPreview() {
+_pendingImport = null;
+document.getElementById(‘importPreview’).style.display = ‘none’;
+document.getElementById(‘importStatus’).textContent    = ‘’;
+document.getElementById(‘importFileInput’).value       = ‘’;
+}
+
+// Step 2: execute the import using the already-parsed data
+function executeImport() {
+if (!_pendingImport) return;
+
+const { incoming, isV2, ver, file: fileName } = _pendingImport;
+_pendingImport = null;
+
+const statusEl  = document.getElementById(‘importStatus’);
+const previewEl = document.getElementById(‘importPreview’);
+
+previewEl.style.display = ‘none’;
+statusEl.style.color    = ‘var(–mid)’;
+statusEl.textContent    = ‘Importing…’;
+
+try {
+// Normalise stamps
+const stamps = (incoming.stamps || []).map(s => ({
+id:           s.id           || uuidv4(),
+name:         s.name         || ‘’,
+country:      s.country      || ‘’,
+state:        s.state        || ‘’,
+category:     s.category     || ‘’,
+type:         s.type         || ‘Regular’,
+location:     s.location     || ‘’,
+description:  s.description  || ‘’,
+referenceUrl: s.referenceUrl || ‘’,
+isEvent:      !!s.isEvent,       // safe boolean coercion
+eventDate:    s.eventDate    || ‘’,
+eventEndDate: s.eventEndDate || ‘’,
+isDisabled:   !!s.isDisabled,    // safe boolean coercion
+dateAdded:    s.dateAdded    || todayStr(),
+}));
+
+```
+// Normalise categories
+const categories = (incoming.categories || []).map(c => ({
+  id:          c.id          || uuidv4(),
+  name:        c.name        || '',
+  createdBy:   c.createdBy   || '',
+  dateCreated: c.dateCreated || todayStr(),
+}));
+
+const current = loadFromStorage();
+const merged  = {
+  stamps,
+  categories,
+  collections: Object.assign({}, current.collections, incoming.collections || {}),
+  stampBooks:  isV2
+    ? current.stampBooks
+    : Object.assign({}, current.stampBooks, incoming.stampBooks || {}),
+};
+
+saveToStorage(merged);
+
+// Verify what was actually saved
+const saved = loadFromStorage();
+
+// Reload state from storage
+loadStamps(); loadCategories(); loadCollection(); loadBooks();
+
+// Reset directory filters so everything is visible
+document.getElementById('dirSearch').value       = '';
+document.getElementById('dirFilterCat').value    = '';
+document.getElementById('dirFilterType').value   = '';
+document.getElementById('dirFilterStatus').value = 'all';
+
+renderAll();
+renderCatPdfList();
+closeModal('ioModal');
+switchTab('directory');
+
+// Report using verified saved counts
+const evCount  = saved.stamps.filter(s =>  s.isEvent).length;
+const disCount = saved.stamps.filter(s =>  s.isDisabled).length;
+const actCount = saved.stamps.filter(s => !s.isDisabled).length;
+const catCount = saved.categories.length;
+const colCount = Object.keys(saved.collections).length;
+
+statusEl.style.color = 'var(--green)';
+statusEl.textContent =
+  '✓ ' + ver + ' import done — '
+  + saved.stamps.length + ' stamps (' + actCount + ' active, ' + disCount + ' disabled, ' + evCount + ' event), '
+  + catCount + ' categor' + (catCount !== 1 ? 'ies' : 'y') + ', '
+  + colCount + ' collection' + (colCount !== 1 ? 's' : '') + '.'
+  + (isV2 ? ' Stamp books kept.' : '');
+
+showToast(ver + ' import complete ✓', 'success');
+document.getElementById('importFileInput').value = '';
+```
+
+} catch(e) {
+statusEl.style.color = ‘var(–red)’;
+statusEl.textContent = ’✗ Import failed: ’ + (e.message || ‘unknown error’);
+document.getElementById(‘importFileInput’).value = ‘’;
+}
+}
+
+// ── Utilities ─────────────────────────────────────────────────────────────────
+function populateCategorySelects() {
+const opts = ‘<option value="">All Categories</option>’
++ state.categories.map(c => ‘<option value="' + esc(c.name) + '">’ + esc(c.name) + ‘</option>’).join(’’);
+document.getElementById(‘dirFilterCat’).innerHTML = opts;
+}
+
+function openModal(id)  { document.getElementById(id).classList.add(‘open’);    }
+function closeModal(id) { document.getElementById(id).classList.remove(‘open’); }
+
+document.querySelectorAll(’.modal-overlay’).forEach(overlay =>
+overlay.addEventListener(‘click’, e => { if (e.target === overlay) overlay.classList.remove(‘open’); })
+);
+
+function confirm2(msg, onOk) {
+document.getElementById(‘confirmMsg’).textContent = msg;
+document.getElementById(‘confirmOkBtn’).onclick = () => { closeModal(‘confirmModal’); onOk(); };
+openModal(‘confirmModal’);
+}
+
+function todayStr() { return new Date().toISOString().split(‘T’)[0]; }
+function datePlusDays(dateStr, days) {
+const d = new Date(dateStr + ‘T00:00:00’);
+d.setDate(d.getDate() + days);
+return d.toISOString().split(‘T’)[0];
+}
+function formatDate(ds) {
+if (!ds) return ‘’;
+return new Date(ds + ‘T00:00:00’).toLocaleDateString(‘en-MY’, { day:‘numeric’, month:‘short’, year:‘numeric’ });
+}
+function esc(str) {
+return str ? String(str).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’) : ‘’;
+}
+function downloadBlob(blob, filename) {
+const url = URL.createObjectURL(blob);
+const a   = Object.assign(document.createElement(‘a’), { href: url, download: filename });
+document.body.appendChild(a); a.click(); document.body.removeChild(a);
+setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+let toastTimer;
+function showToast(msg, type) {
+clearTimeout(toastTimer);
+const t = document.getElementById(‘toast’);
+t.textContent = msg;
+t.className   = ‘toast ’ + (type||’’) + ’ show’;
+toastTimer = setTimeout(() => t.classList.remove(‘show’), 2800);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+init();
+</script>
+
+</body>
+</html>
