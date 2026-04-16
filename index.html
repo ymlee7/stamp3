@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -10,30 +11,43 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── Variables ── */
+/* ══════════════════════════════════════════════════════
+   VARIABLES
+══════════════════════════════════════════════════════ */
 :root {
-  --sky:    #4A90D9;
-  --sky-dk: #3070B8;
-  --sky-lt: #E8F2FB;
-  --gold:   #F5A623;
-  --gold-dk:#D48B10;
-  --gold-lt:#FEF5E7;
-  --cloud:  #F8F9FA;
-  --white:  #FFFFFF;
-  --dark:   #2C3E50;
-  --mid:    #5D6D7E;
-  --light:  #BDC3C7;
-  --border: #E0E6ED;
-  --red:    #E74C3C;
-  --green:  #27AE60;
-  --radius: 12px;
-  --shadow: 0 2px 12px rgba(44,62,80,.10);
+  --sky:       #4A90D9;
+  --sky-dk:    #3070B8;
+  --sky-lt:    #E8F2FB;
+  --gold:      #F5A623;
+  --gold-dk:   #D48B10;
+  --gold-lt:   #FEF5E7;
+  --cloud:     #F8F9FA;
+  --dark:      #2C3E50;
+  --mid:       #5D6D7E;
+  --light:     #BDC3C7;
+  --border:    #E0E6ED;
+  --red:       #E74C3C;
+  --green:     #27AE60;
+  --radius:    12px;
+  --shadow:    0 2px 12px rgba(44,62,80,.10);
   --shadow-lg: 0 8px 32px rgba(44,62,80,.18);
+  --sat: env(safe-area-inset-top,    0px);
+  --sar: env(safe-area-inset-right,  0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left,   0px);
 }
 
-/* ── Reset ── */
+/* ══════════════════════════════════════════════════════
+RESET + BASE
+══════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; }
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   font-family: 'Figtree', sans-serif;
   background: var(--cloud);
@@ -43,11 +57,22 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-/* ── Header ── */
+a, button, input, select, textarea, label,
+[onclick], [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a, input, select, textarea, label, [onclick] {
+  touch-action: manipulation;
+}
+
+/* ══════════════════════════════════════════════════════
+HEADER
+══════════════════════════════════════════════════════ */
 .app-header {
   background: linear-gradient(135deg, var(--sky) 0%, var(--sky-dk) 100%);
   color: #fff;
-  padding: 0 24px;
+  padding: 0 calc(24px + var(--sar)) 0 calc(24px + var(--sal));
   position: sticky;
   top: 0;
   z-index: 100;
@@ -60,8 +85,21 @@ body {
   padding: 14px 0 10px;
   gap: 12px;
 }
-.header-title { font-family: 'DM Serif Display', serif; font-size: 1.5rem; line-height: 1.2; }
-.header-title span { display: block; font-family: 'Figtree', sans-serif; font-size: .75rem; font-weight: 400; opacity: .8; letter-spacing: .04em; margin-top: 1px; }
+.header-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+.header-title span {
+  display: block;
+  font-family: 'Figtree', sans-serif;
+  font-size: .75rem;
+  font-weight: 400;
+  opacity: .8;
+  letter-spacing: .04em;
+  margin-top: 1px;
+}
+
 .user-selector {
   display: flex;
   align-items: center;
@@ -69,27 +107,31 @@ body {
   background: rgba(255,255,255,.15);
   border: 1px solid rgba(255,255,255,.3);
   border-radius: 24px;
+  min-height: 44px;
   padding: 6px 14px 6px 8px;
   cursor: pointer;
-  transition: background .2s;
   white-space: nowrap;
 }
-.user-selector:hover { background: rgba(255,255,255,.25); }
-.user-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 700; color: #fff; flex-shrink: 0; }
-.user-dot.ymlee   { background: var(--gold); color: var(--dark); }
-.user-dot.calvin  { background: #8E44AD; }
-.user-dot.other   { background: #27AE60; }
-.user-name { font-size: .85rem; font-weight: 600; color: #fff; }
+.user-selector:active { background: rgba(255,255,255,.30); }
+.user-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .8rem; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.user-dot.ymlee  { background: var(--gold); color: var(--dark); }
+.user-dot.calvin { background: #8E44AD; }
+.user-dot.other  { background: #27AE60; }
+.user-name    { font-size: .85rem; font-weight: 600; color: #fff; }
 .user-chevron { font-size: .7rem; opacity: .7; }
 
-/* Tabs */
 .tab-bar {
   display: flex;
   gap: 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 .tab-bar::-webkit-scrollbar { display: none; }
 .tab-btn {
@@ -99,16 +141,17 @@ body {
   font-family: 'Figtree', sans-serif;
   font-size: .82rem;
   font-weight: 600;
+  min-height: 44px;
   padding: 10px 18px;
   cursor: pointer;
   border-bottom: 3px solid transparent;
   white-space: nowrap;
-  transition: color .2s, border-color .2s;
+  transition: color .15s, border-color .15s;
   display: flex;
   align-items: center;
   gap: 6px;
 }
-.tab-btn:hover { color: rgba(255,255,255,.9); }
+.tab-btn:active { color: #fff; }
 .tab-btn.active { color: #fff; border-bottom-color: var(--gold); }
 .tab-count {
   background: rgba(255,255,255,.2);
@@ -121,12 +164,18 @@ body {
 }
 .tab-btn.active .tab-count { background: var(--gold); color: var(--dark); }
 
-/* ── Content ── */
-.content { padding: 24px; max-width: 1100px; margin: 0 auto; }
-.tab-panel { display: none; }
+/* ══════════════════════════════════════════════════════
+CONTENT
+══════════════════════════════════════════════════════ */
+.content {
+  padding: 24px calc(24px + var(--sar)) 24px calc(24px + var(--sal));
+  padding-bottom: calc(24px + var(--sab));
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.tab-panel        { display: none; }
 .tab-panel.active { display: block; }
 
-/* ── Section header ── */
 .section-header {
   display: flex;
   align-items: center;
@@ -135,41 +184,100 @@ body {
   flex-wrap: wrap;
   gap: 12px;
 }
-.section-title { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--dark); }
+.section-title   { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--dark); }
 .section-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-/* ── Buttons ── */
+/* ══════════════════════════════════════════════════════
+BUTTONS
+══════════════════════════════════════════════════════ */
 .btn {
   font-family: 'Figtree', sans-serif;
-  font-size: .85rem;
+  font-size: .9rem;
   font-weight: 600;
-  padding: 9px 18px;
-  border-radius: 8px;
+  min-height: 44px;
+  padding: 10px 20px;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  transition: all .15s;
+  transition: background .15s, border-color .15s, color .15s;
   white-space: nowrap;
+  -webkit-user-select: none;
+  user-select: none;
 }
-.btn:active { transform: scale(.97); }
-.btn-primary   { background: var(--sky); color: #fff; }
-.btn-primary:hover { background: var(--sky-dk); }
-.btn-gold      { background: var(--gold); color: var(--dark); }
-.btn-gold:hover { background: var(--gold-dk); }
-.btn-outline   { background: #fff; color: var(--dark); border: 1.5px solid var(--border); }
-.btn-outline:hover { border-color: var(--sky); color: var(--sky); }
-.btn-danger    { background: var(--red); color: #fff; }
-.btn-danger:hover { background: #c0392b; }
-.btn-ghost     { background: none; border: none; color: var(--mid); padding: 6px 8px; font-size: .82rem; }
-.btn-ghost:hover { color: var(--dark); background: var(--cloud); border-radius: 6px; }
-.btn-sm { padding: 6px 12px; font-size: .78rem; }
-.btn-icon { padding: 7px; border-radius: 8px; background: none; border: 1.5px solid var(--border); color: var(--mid); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; transition: all .15s; }
-.btn-icon:hover { border-color: var(--sky); color: var(--sky); background: var(--sky-lt); }
-.btn-icon.danger:hover { border-color: var(--red); color: var(--red); background: #fdecea; }
+.btn:active        { opacity: .82; transform: scale(.97); }
+.btn-primary       { background: var(--sky);   color: #fff; }
+.btn-primary:active { background: var(--sky-dk); }
+.btn-gold          { background: var(--gold);  color: var(--dark); }
+.btn-gold:active   { background: var(--gold-dk); }
+.btn-outline       { background: #fff; color: var(--dark); border: 1.5px solid var(--border); }
+.btn-outline:active { border-color: var(--sky); color: var(--sky); }
+.btn-danger        { background: var(--red);   color: #fff; }
+.btn-danger:active { background: #c0392b; }
+.btn-ghost         { background: none; border: none; color: var(--mid); min-height: 44px; padding: 10px 12px; font-size: .85rem; }
+.btn-ghost:active  { color: var(--dark); background: var(--cloud); border-radius: 8px; }
+.btn-sm            { min-height: 44px; padding: 10px 16px; font-size: .82rem; }
+.btn-icon {
+  min-width: 44px; min-height: 44px;
+  border-radius: 10px;
+  background: none;
+  border: 1.5px solid var(--border);
+  color: var(--mid);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  transition: all .15s;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.btn-icon:active        { border-color: var(--sky);  color: var(--sky);  background: var(--sky-lt); }
+.btn-icon.danger:active { border-color: var(--red);  color: var(--red);  background: #fdecea; }
+.btn-icon-sm {
+  width: 26px; height: 26px; min-width: 26px; min-height: 26px;
+  border-radius: 6px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--mid);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .75rem;
+  transition: all .15s;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.btn-icon-sm:active        { border-color: var(--sky); color: var(--sky); background: var(--sky-lt); }
+.btn-icon-sm.danger:active { border-color: var(--red); color: var(--red); background: #fdecea; }
 
-/* ── Cards / Table ── */
+.io-btn {
+  background: rgba(255,255,255,.15);
+  border: 1.5px solid rgba(255,255,255,.35);
+  color: #fff;
+  font-family: 'Figtree', sans-serif;
+  font-size: .82rem;
+  font-weight: 600;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.io-btn:active { background: rgba(255,255,255,.32); }
+
+/* ══════════════════════════════════════════════════════
+CARDS / TABLE
+══════════════════════════════════════════════════════ */
 .card {
   background: #fff;
   border-radius: var(--radius);
@@ -177,498 +285,513 @@ body {
   overflow: hidden;
   box-shadow: var(--shadow);
 }
-.card-body { padding: 20px; }
 
-/* Stamps table */
 .stamp-table { width: 100%; border-collapse: collapse; }
 .stamp-table th {
   background: var(--cloud);
   color: var(--mid);
-  font-size: .75rem;
+  font-size: .83rem;
   font-weight: 700;
-  letter-spacing: .06em;
+  letter-spacing: .03em;
   text-transform: uppercase;
-  padding: 10px 14px;
+  padding: 10px 10px;
   text-align: left;
+  line-height: 1.2;
   border-bottom: 1.5px solid var(--border);
 }
 .stamp-table td {
-  padding: 12px 14px;
+  padding: 5px 10px;
   border-bottom: 1px solid var(--border);
-  font-size: .88rem;
+  font-size: .83rem;
   vertical-align: middle;
+  line-height: 1.2;
 }
 .stamp-table tr:last-child td { border-bottom: none; }
-.stamp-table tr:hover td { background: var(--sky-lt); }
-.stamp-table tr.disabled td { opacity: .5; }
+.stamp-table tr:active td    { background: var(--sky-lt); }
+.stamp-table tr.disabled td  { opacity: .5; }
 
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 3px 9px;
+  padding: 4px 10px;
   border-radius: 20px;
-  font-size: .72rem;
+  font-size: .74rem;
   font-weight: 700;
   white-space: nowrap;
 }
 .badge-event     { background: var(--gold-lt); color: var(--gold-dk); }
 .badge-regular   { background: var(--sky-lt);  color: var(--sky-dk); }
-.badge-disabled  { background: #f5f5f5; color: #999; }
-.badge-past      { background: #f0e6f6; color: #8E44AD; }
-.badge-collected { background: #e8f8f0; color: var(--green); }
+.badge-disabled  { background: #f0f0f0;        color: #999; }
+.badge-past      { background: #f0e6f6;        color: #8E44AD; }
+.badge-collected { background: #e8f8f0;        color: var(--green); }
 
-/* ── Stamp Book Cards ── */
+/* ══════════════════════════════════════════════════════
+STAMP BOOKS GRID
+══════════════════════════════════════════════════════ */
 .books-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
 }
 .book-card {
   background: #fff;
   border-radius: var(--radius);
   border: 1.5px solid var(--border);
   box-shadow: var(--shadow);
-  overflow: hidden;
-  transition: box-shadow .2s, transform .15s;
+  display: flex;
+  flex-direction: column;
 }
-.book-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+/* Row 1 — book number + name + action icons */
 .book-card-top {
   background: linear-gradient(135deg, var(--sky-lt) 0%, #daeeff 100%);
-  padding: 18px 18px 14px;
+  padding: 10px 12px 8px;
   border-bottom: 1.5px solid var(--border);
-  position: relative;
-}
-.book-seq {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  background: var(--sky);
-  color: #fff;
-  border-radius: 8px;
-  padding: 3px 10px;
-  font-size: .78rem;
-  font-weight: 700;
-  letter-spacing: .04em;
-}
-.book-icon { font-size: 2rem; margin-bottom: 6px; }
-.book-name { font-family: 'DM Serif Display', serif; font-size: 1.15rem; color: var(--dark); line-height: 1.3; padding-right: 52px; }
-.book-date { font-size: .76rem; color: var(--mid); margin-top: 4px; }
-.book-card-body { padding: 14px 18px; }
-.book-stamp-count {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: .84rem;
-  color: var(--mid);
-  margin-bottom: 14px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  flex: 1;
 }
-.book-stamp-count strong { color: var(--dark); font-size: 1.1rem; }
-.book-actions { display: flex; gap: 8px; }
-.book-actions .btn { flex: 1; justify-content: center; }
+.book-title-wrap { flex: 1; overflow: hidden; }
+.book-seq-inline {
+  font-size: .72rem; font-weight: 700; color: var(--sky);
+  letter-spacing: .04em; margin-bottom: 2px;
+}
+.book-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: .95rem; color: var(--dark); line-height: 1.3;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.book-card-actions { display: flex; gap: 4px; flex-shrink: 0; }
+/* Row 2 — notes + stamp count + PDF button */
+.book-card-footer {
+  padding: 7px 12px;
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0; border-top: 0;
+}
+.book-footer-info { flex: 1; overflow: hidden; }
+.book-notes-preview {
+  font-size: .72rem; color: var(--mid); font-style: italic;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.book-stamp-count { font-size: .75rem; color: var(--mid); margin-top: 1px; }
+.book-stamp-count strong { color: var(--dark); }
 
-/* ── My Collection ── */
+/* ══════════════════════════════════════════════════════
+MY COLLECTION
+══════════════════════════════════════════════════════ */
 .collection-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
 }
 .collection-item {
   background: #fff;
   border-radius: 10px;
   border: 1.5px solid var(--border);
-  padding: 14px;
+  padding: 10px 12px;
   cursor: pointer;
-  transition: all .15s;
+  transition: border-color .15s, background .15s;
   position: relative;
+  height: 80px;           /* fixed height — all collection cards same size */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
 }
-.collection-item:hover { border-color: var(--sky); box-shadow: 0 2px 8px rgba(74,144,217,.15); }
+.collection-item:active { border-color: var(--sky); background: var(--sky-lt); }
 .collection-item.collected {
   border-color: var(--green);
   background: linear-gradient(135deg, #f0fff6 0%, #e8f8f0 100%);
 }
+.collection-item.collected:active { background: #d4f5e5; }
+.collection-item.disabled { opacity: .55; }
 .collection-check {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 22px;
-  height: 22px;
+  position: absolute; top: 8px; right: 8px;
+  width: 22px; height: 22px;
   border-radius: 50%;
   border: 2px solid var(--light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: .75rem;
-  transition: all .15s;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .72rem; flex-shrink: 0;
 }
 .collection-item.collected .collection-check {
-  background: var(--green);
-  border-color: var(--green);
-  color: #fff;
+  background: var(--green); border-color: var(--green); color: #fff;
 }
-.ci-name { font-size: .88rem; font-weight: 600; color: var(--dark); margin-bottom: 4px; padding-right: 26px; }
-.ci-meta { font-size: .75rem; color: var(--mid); }
+.ci-name {
+  font-size: .84rem; font-weight: 600; color: var(--dark);
+  padding-right: 28px; line-height: 1.25;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.ci-meta  { font-size: .72rem; color: var(--mid); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* ── Hunt Categories ── */
-.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+/* ══════════════════════════════════════════════════════
+HUNT CATEGORIES
+══════════════════════════════════════════════════════ */
+.cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .cat-card {
-  background: #fff;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  box-shadow: var(--shadow);
-  overflow: hidden;
+  background: #fff; border-radius: var(--radius);
+  border: 1.5px solid var(--border); box-shadow: var(--shadow); overflow: hidden;
+  display: flex; flex-direction: column;
 }
 .cat-card-top {
   background: linear-gradient(135deg, var(--gold-lt) 0%, #fde8c0 100%);
-  padding: 16px;
+  padding: 10px 12px 8px;
   border-bottom: 1.5px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+  flex: 1;
 }
-.cat-name { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--dark); }
-.cat-body { padding: 14px 16px; font-size: .82rem; color: var(--mid); display: flex; flex-direction: column; gap: 4px; }
-.cat-body span { display: flex; gap: 6px; }
-.cat-actions { display: flex; gap: 6px; }
+.cat-name {
+  font-family: 'DM Serif Display', serif; font-size: .95rem; color: var(--dark);
+  line-height: 1.3; flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.cat-actions { display: flex; gap: 4px; flex-shrink: 0; }
 
-/* ── Upcoming Events ── */
-.events-filter {
-  background: #fff;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  padding: 16px;
-  margin-bottom: 20px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  align-items: center;
+/* ── Category colour swatches ── */
+.color-swatch-row {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
 }
-.filter-group { display: flex; flex-direction: column; gap: 4px; }
-.filter-label { font-size: .72rem; font-weight: 700; color: var(--mid); text-transform: uppercase; letter-spacing: .05em; }
-.filter-select, .filter-input {
+.color-swatch {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer; flex-shrink: 0;
+  transition: transform .12s, border-color .12s;
+  -webkit-user-select: none; user-select: none;
+}
+.color-swatch:hover  { transform: scale(1.15); }
+.color-swatch.active { border-color: var(--dark); transform: scale(1.15); }
+.cat-footer {
+  padding: 7px 12px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  flex-shrink: 0;
+}
+.cat-stamp-count { font-size: .78rem; color: var(--mid); }
+.cat-stamp-count strong { color: var(--dark); }
+
+/* ══════════════════════════════════════════════════════
+UPCOMING EVENTS
+══════════════════════════════════════════════════════ */
+.events-filter {
+  background: #fff; border-radius: var(--radius);
+  border: 1.5px solid var(--border); padding: 16px; margin-bottom: 20px;
+  display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;
+}
+.filter-group  { display: flex; flex-direction: column; gap: 4px; }
+.filter-label  { font-size: .72rem; font-weight: 700; color: var(--mid); text-transform: uppercase; letter-spacing: .05em; }
+
+.filter-select, .filter-input,
+.search-input,
+.form-input, .form-select, .form-textarea {
   font-family: 'Figtree', sans-serif;
-  font-size: .85rem;
-  padding: 8px 12px;
+  font-size: 1rem;
+  min-height: 44px;
+  padding: 10px 12px;
   border: 1.5px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
   color: var(--dark);
   background: #fff;
   outline: none;
+  -webkit-appearance: none;
+  appearance: none;
   transition: border-color .15s;
+  width: 100%;
 }
-.filter-select:focus, .filter-input:focus { border-color: var(--sky); }
+.filter-select:focus, .filter-input:focus,
+.form-input:focus, .form-select:focus, .form-textarea:focus,
+.search-input:focus { border-color: var(--sky); }
+.form-textarea { resize: vertical; min-height: 90px; }
+.form-hint { font-size: .76rem; color: var(--mid); }
+.form-check { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: .9rem; min-height: 44px; }
+.form-check input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--sky); cursor: pointer; flex-shrink: 0; }
+
+/* ── Star rating ── */
+.star-rating { display: flex; align-items: center; gap: 4px; }
+.star-rating .star {
+  font-size: 1.6rem; cursor: pointer; line-height: 1;
+  color: var(--light);
+  transition: color .1s, transform .1s;
+  -webkit-user-select: none; user-select: none;
+}
+.star-rating .star.filled   { color: var(--gold); }
+.star-rating .star.hovered  { color: var(--gold); transform: scale(1.15); }
+.star-rating-clear {
+  font-size: .78rem; color: var(--mid); cursor: pointer;
+  margin-left: 8px; text-decoration: underline; white-space: nowrap;
+}
+.star-rating-clear:hover { color: var(--red); }
+/* Inline stars shown in directory table */
+.stars-display { color: var(--gold); font-size: .85rem; white-space: nowrap; letter-spacing: 1px; }
+
 .event-card {
-  background: #fff;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  padding: 16px;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow);
+  background: #fff; border-radius: var(--radius);
+  border: 1.5px solid var(--border); padding: 16px;
+  display: flex; align-items: flex-start; gap: 16px;
+  margin-bottom: 12px; box-shadow: var(--shadow);
 }
 .event-date-badge {
-  background: var(--gold-lt);
-  border: 1.5px solid var(--gold);
-  border-radius: 10px;
-  padding: 8px 12px;
-  text-align: center;
-  min-width: 56px;
-  flex-shrink: 0;
+  background: var(--gold-lt); border: 1.5px solid var(--gold);
+  border-radius: 10px; padding: 8px 12px;
+  text-align: center; min-width: 58px; flex-shrink: 0;
 }
-.event-date-badge .month { font-size: .65rem; font-weight: 700; color: var(--gold-dk); text-transform: uppercase; letter-spacing: .08em; }
-.event-date-badge .day   { font-size: 1.5rem; font-weight: 700; color: var(--dark); line-height: 1; }
-.event-info { flex: 1; }
-.event-name { font-weight: 700; font-size: .95rem; color: var(--dark); margin-bottom: 4px; }
-.event-meta { font-size: .78rem; color: var(--mid); display: flex; flex-wrap: wrap; gap: 8px; }
+.event-date-badge .month { font-size: .66rem; font-weight: 700; color: var(--gold-dk); text-transform: uppercase; letter-spacing: .08em; }
+.event-date-badge .day   { font-size: 1.6rem; font-weight: 700; color: var(--dark); line-height: 1; }
+.event-info  { flex: 1; }
+.event-name  { font-weight: 700; font-size: .95rem; color: var(--dark); margin-bottom: 4px; }
+.event-meta  { font-size: .8rem; color: var(--mid); display: flex; flex-wrap: wrap; gap: 8px; }
 
-/* ── Search ── */
+/* ══════════════════════════════════════════════════════
+SEARCH BAR — base (used by Collection and other tabs)
+══════════════════════════════════════════════════════ */
 .search-bar {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
+  display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
 }
 .search-input {
   flex: 1;
   min-width: 200px;
-  font-family: 'Figtree', sans-serif;
-  font-size: .9rem;
-  padding: 10px 14px 10px 38px;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  color: var(--dark);
-  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23BDC3C7' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E") no-repeat 12px center;
-  outline: none;
-  transition: border-color .15s;
+  padding: 10px 14px 10px 40px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23BDC3C7' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z'/%3E%3C/svg%3E") no-repeat 13px center;
 }
-.search-input:focus { border-color: var(--sky); }
 
-/* ── Modals ── */
+/* ── Directory filter row — single row, no wrapping ── */
+.dir-filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: nowrap;   /* ← keep all filters on one row */
+  align-items: center;
+}
+.dir-filter-bar .search-input {
+  flex: 1 1 0;
+  min-width: 0;        /* allow shrinking below 200px if needed */
+}
+.dir-filter-bar .filter-select {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+/* ══════════════════════════════════════════════════════
+FORM GRID
+══════════════════════════════════════════════════════ */
+.form-grid         { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-grid.one-col { grid-template-columns: 1fr; }
+.form-col-full     { grid-column: 1 / -1; }
+.form-group        { display: flex; flex-direction: column; gap: 6px; }
+.form-label        { font-size: .78rem; font-weight: 700; color: var(--mid); text-transform: uppercase; letter-spacing: .05em; }
+
+/* ══════════════════════════════════════════════════════
+MODALS
+══════════════════════════════════════════════════════ */
 .modal-overlay {
   display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.45);
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
   z-index: 200;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  padding: 20px;
 }
 .modal-overlay.open { display: flex; }
 .modal {
   background: #fff;
-  border-radius: 16px;
+  border-radius: 20px 20px 0 0;
   box-shadow: var(--shadow-lg);
   width: 100%;
-  max-width: 540px;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  max-width: 680px;
+  max-height: 92dvh;
+  display: flex; flex-direction: column; overflow: hidden;
+  padding-bottom: var(--sab);
 }
-.modal-lg { max-width: 780px; }
-.modal-xl { max-width: 1000px; }
+.modal-lg { max-width: 860px; }
+.modal-xl { max-width: 1040px; }
 .modal-header {
   padding: 20px 24px 16px;
   border-bottom: 1.5px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   flex-shrink: 0;
 }
-.modal-title { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--dark); }
-.modal-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--mid); padding: 4px; border-radius: 6px; }
-.modal-close:hover { color: var(--dark); background: var(--cloud); }
-.modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+.modal-title { font-family: 'DM Serif Display', serif; font-size: 1.25rem; color: var(--dark); }
+.modal-close {
+  background: var(--cloud); border: none;
+  width: 36px; height: 36px; border-radius: 50%;
+  font-size: 1rem; cursor: pointer; color: var(--mid);
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:active { background: var(--border); }
+.modal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+}
 .modal-footer {
   padding: 14px 24px;
   border-top: 1.5px solid var(--border);
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
+  display: flex; gap: 10px; justify-content: flex-end;
   flex-shrink: 0;
 }
 
-/* ── Form ── */
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.form-grid.one-col { grid-template-columns: 1fr; }
-.form-col-full { grid-column: 1 / -1; }
-.form-group { display: flex; flex-direction: column; gap: 5px; }
-.form-label { font-size: .78rem; font-weight: 700; color: var(--mid); text-transform: uppercase; letter-spacing: .05em; }
-.form-input, .form-select, .form-textarea {
-  font-family: 'Figtree', sans-serif;
-  font-size: .9rem;
-  padding: 10px 12px;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  color: var(--dark);
-  background: #fff;
-  outline: none;
-  transition: border-color .15s;
-  width: 100%;
-}
-.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--sky); }
-.form-textarea { resize: vertical; min-height: 80px; }
-.form-hint { font-size: .74rem; color: var(--mid); }
-.form-check { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: .9rem; }
-.form-check input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--sky); cursor: pointer; }
-
-/* Stamp selector in book modal */
+/* ══════════════════════════════════════════════════════
+STAMP SELECTOR (inside book modal)
+══════════════════════════════════════════════════════ */
 .stamp-selector-filters {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-  align-items: center;
+  display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: nowrap; align-items: center;
 }
 .stamp-selector-list {
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
+  border: 1.5px solid var(--border); border-radius: 10px;
   overflow: hidden;
-  max-height: 420px;
+  max-height: 48vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .stamp-selector-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 14px;
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 14px;
   border-bottom: 1px solid var(--border);
   cursor: pointer;
   transition: background .1s;
 }
 .stamp-selector-item:last-child { border-bottom: none; }
-.stamp-selector-item:hover { background: var(--sky-lt); }
+.stamp-selector-item:active  { background: var(--sky-lt); }
 .stamp-selector-item.selected { background: #e8f8f0; }
-.stamp-selector-item input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--sky); flex-shrink: 0; cursor: pointer; }
+.stamp-selector-item input[type=checkbox] {
+  width: 20px; height: 20px;
+  accent-color: var(--sky); flex-shrink: 0;
+}
 .ssi-info { flex: 1; }
-.ssi-name { font-size: .88rem; font-weight: 600; color: var(--dark); }
-.ssi-meta { font-size: .75rem; color: var(--mid); display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.ssi-name { font-size: .9rem; font-weight: 600; color: var(--dark); }
+.ssi-meta { font-size: .76rem; color: var(--mid); display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 .ssi-tags { display: flex; gap: 4px; flex-shrink: 0; }
-.sel-count { font-size: .82rem; color: var(--mid); }
+.sel-count { font-size: .84rem; color: var(--mid); }
 .sel-count strong { color: var(--sky); }
 
-/* User dropdown */
+/* ══════════════════════════════════════════════════════
+USER DROPDOWN
+══════════════════════════════════════════════════════ */
 .user-dropdown {
   display: none;
-  position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
-  background: #fff;
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  box-shadow: var(--shadow-lg);
-  z-index: 150;
-  min-width: 180px;
-  overflow: hidden;
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: #fff; border: 1.5px solid var(--border);
+  border-radius: 14px; box-shadow: var(--shadow-lg);
+  z-index: 150; min-width: 190px; overflow: hidden;
 }
 .user-dropdown.open { display: block; }
 .user-dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  cursor: pointer;
-  font-size: .88rem;
-  font-weight: 500;
-  transition: background .1s;
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px;
+  cursor: pointer; font-size: .9rem; font-weight: 500;
 }
-.user-dropdown-item:hover { background: var(--cloud); }
+.user-dropdown-item:active { background: var(--sky-lt); }
 .user-dropdown-item.active { background: var(--sky-lt); color: var(--sky); }
 .header-right { position: relative; }
 
-/* Toast */
+/* ══════════════════════════════════════════════════════
+TOAST
+══════════════════════════════════════════════════════ */
 .toast {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: var(--dark);
-  color: #fff;
-  padding: 12px 18px;
-  border-radius: 10px;
-  font-size: .88rem;
-  font-weight: 500;
+  bottom: calc(24px + var(--sab));
+  right: calc(20px + var(--sar));
+  background: var(--dark); color: #fff;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-size: .9rem; font-weight: 500;
   box-shadow: var(--shadow-lg);
   z-index: 999;
-  transform: translateY(80px);
-  opacity: 0;
+  transform: translateY(80px); opacity: 0;
   transition: all .3s ease;
-  max-width: 320px;
+  max-width: 340px;
 }
-.toast.show { transform: translateY(0); opacity: 1; }
+.toast.show    { transform: translateY(0); opacity: 1; }
 .toast.success { background: var(--green); }
-.toast.error { background: var(--red); }
+.toast.error   { background: var(--red); }
 
-/* Empty state */
-.empty-state {
-  text-align: center;
-  padding: 48px 24px;
-  color: var(--mid);
-}
+/* ══════════════════════════════════════════════════════
+EMPTY STATE
+══════════════════════════════════════════════════════ */
+.empty-state { text-align: center; padding: 56px 24px; color: var(--mid); }
 .empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: .6; }
-.empty-state h3 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--dark); margin-bottom: 6px; }
-.empty-state p { font-size: .88rem; }
+.empty-state h3 { font-family: 'DM Serif Display', serif; font-size: 1.25rem; color: var(--dark); margin-bottom: 6px; }
+.empty-state p  { font-size: .9rem; }
 
-/* ── Import / Export button ── */
-.io-btn {
-  background: rgba(255,255,255,.15);
-  border: 1.5px solid rgba(255,255,255,.35);
-  color: #fff;
-  font-family: 'Figtree', sans-serif;
-  font-size: .8rem;
-  font-weight: 600;
-  padding: 7px 13px;
-  border-radius: 8px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background .2s;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.io-btn:hover { background: rgba(255,255,255,.28); }
-
-/* ── Import/Export modal sections ── */
-.io-section {
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  margin-bottom: 20px;
-}
+/* ══════════════════════════════════════════════════════
+IMPORT / EXPORT MODAL SECTIONS
+══════════════════════════════════════════════════════ */
+.io-section { border: 1.5px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 20px; }
 .io-section:last-child { margin-bottom: 0; }
 .io-section-header {
-  background: var(--cloud);
-  padding: 12px 16px;
+  background: var(--cloud); padding: 12px 16px;
   border-bottom: 1.5px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display: flex; align-items: center; gap: 8px;
 }
 .io-section-title { font-weight: 700; font-size: .9rem; color: var(--dark); }
-.io-section-body { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-.io-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.io-row-info { flex: 1; }
-.io-row-label { font-size: .88rem; font-weight: 600; color: var(--dark); }
-.io-row-desc  { font-size: .76rem; color: var(--mid); margin-top: 2px; }
-.io-divider { border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+.io-section-body  { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.io-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.io-row-info  { flex: 1; }
+.io-row-label { font-size: .9rem; font-weight: 600; color: var(--dark); }
+.io-row-desc  { font-size: .78rem; color: var(--mid); margin-top: 2px; }
+.io-divider   { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .import-warning {
-  background: #fff8e6;
-  border: 1.5px solid var(--gold);
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: .82rem;
-  color: #7a5200;
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
+  background: #fff8e6; border: 1.5px solid var(--gold);
+  border-radius: 10px; padding: 12px 14px;
+  font-size: .84rem; color: #7a5200;
+  display: flex; gap: 8px; align-items: flex-start;
 }
 .cat-pdf-list { display: flex; flex-direction: column; gap: 8px; }
-.cat-pdf-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 9px 12px;
-  background: var(--cloud);
-  border-radius: 8px;
+.cat-pdf-row  {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 10px 12px;
+  background: var(--cloud); border-radius: 10px;
 }
-.cat-pdf-name { font-size: .88rem; font-weight: 600; color: var(--dark); }
-.cat-pdf-count { font-size: .76rem; color: var(--mid); }
+.cat-pdf-name  { font-size: .9rem; font-weight: 600; color: var(--dark); }
+.cat-pdf-count { font-size: .78rem; color: var(--mid); }
 
-/* ── Print / PDF styles ── */
+/* ══════════════════════════════════════════════════════
+PRINT
+══════════════════════════════════════════════════════ */
 @media print {
   body * { visibility: hidden; }
   #printRegion, #printRegion * { visibility: visible; }
-  #printRegion {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    font-family: 'Figtree', sans-serif;
-  }
+  #printRegion { position: fixed; top: 0; left: 0; width: 100%; }
 }
 
-/* Responsive */
+/* ══════════════════════════════════════════════════════
+RESPONSIVE — iPad portrait (≤ 834px)
+══════════════════════════════════════════════════════ */
+@media (max-width: 834px) {
+  .collection-grid { grid-template-columns: repeat(2, 1fr); }
+  .books-grid      { grid-template-columns: repeat(2, 1fr); }
+  .cat-grid        { grid-template-columns: repeat(2, 1fr); }
+  .content         { padding-left: 16px; padding-right: 16px; }
+  .app-header      { padding-left: 16px; padding-right: 16px; }
+  .modal           { max-width: 100%; border-radius: 20px 20px 0 0; }
+}
+
+/* ══════════════════════════════════════════════════════
+RESPONSIVE — phone (≤ 600px)
+Wrap directory filters back to multi-row on small screens
+══════════════════════════════════════════════════════ */
 @media (max-width: 600px) {
-  .content { padding: 16px; }
-  .header-top { padding: 10px 0 8px; }
-  .header-title { font-size: 1.2rem; }
-  .form-grid { grid-template-columns: 1fr; }
-  .books-grid { grid-template-columns: 1fr; }
-  .tab-btn { padding: 10px 13px; font-size: .78rem; }
-  .io-btn span { display: none; }
+  .header-title       { font-size: 1.2rem; }
+  .header-top         { padding: 10px 0 8px; }
+  .collection-grid    { grid-template-columns: 1fr 1fr; }
+  .books-grid         { grid-template-columns: 1fr; }
+  .cat-grid           { grid-template-columns: 1fr; }
+  .form-grid          { grid-template-columns: 1fr; }
+  .tab-btn            { padding: 10px 12px; font-size: .78rem; }
+  .io-btn span        { display: none; }
+  .modal              { max-height: 96dvh; }
+  /* Allow directory filters to wrap on phones */
+  .dir-filter-bar     { flex-wrap: wrap; }
+  .dir-filter-bar .search-input { min-width: 200px; }
 }
 </style>
+
 </head>
 <body>
 
 <!-- ════ HEADER ════ -->
+
 <header class="app-header">
   <div class="header-top">
     <div class="header-title">
@@ -678,28 +801,25 @@ body {
     <div class="header-right" style="display:flex;align-items:center;gap:10px">
       <button class="io-btn" onclick="openIoModal()">⇅ <span>Import / Export</span></button>
       <div style="position:relative">
-      <div class="user-selector" id="userSelectorBtn" onclick="toggleUserDropdown()">
-        <div class="user-dot" id="headerDot">YM</div>
-        <span class="user-name" id="headerName">ymlee.admin</span>
-        <span class="user-chevron">▾</span>
-      </div>
-      <div class="user-dropdown" id="userDropdown">
-        <div class="user-dropdown-item active" data-user="ymlee.admin" onclick="switchUser('ymlee.admin')">
-          <div class="user-dot ymlee">YM</div> ymlee.admin
+        <div class="user-selector" id="userSelectorBtn" onclick="toggleUserDropdown()">
+          <div class="user-dot" id="headerDot">YM</div>
+          <span class="user-name" id="headerName">ymlee.admin</span>
+          <span class="user-chevron">▾</span>
         </div>
-        <div class="user-dropdown-item" data-user="calvin.lee" onclick="switchUser('calvin.lee')">
-          <div class="user-dot calvin">CL</div> calvin.lee
+        <div class="user-dropdown" id="userDropdown">
+          <div class="user-dropdown-item active" data-user="ymlee.admin" onclick="switchUser('ymlee.admin')">
+            <div class="user-dot ymlee">YM</div> ymlee.admin
+          </div>
+          <div class="user-dropdown-item" data-user="calvin.lee" onclick="switchUser('calvin.lee')">
+            <div class="user-dot calvin">CL</div> calvin.lee
+          </div>
         </div>
       </div>
-      </div><!-- /user wrapper -->
     </div>
   </div>
   <nav class="tab-bar">
     <button class="tab-btn active" data-tab="directory" onclick="switchTab('directory')">
-      📋 Directory <span class="tab-count" id="cnt-directory">0</span>
-    </button>
-    <button class="tab-btn" data-tab="collection" onclick="switchTab('collection')">
-      ⭐ My Collection <span class="tab-count" id="cnt-collection">0</span>
+      📋 Stamp Directory <span class="tab-count" id="cnt-directory">0</span>
     </button>
     <button class="tab-btn" data-tab="categories" onclick="switchTab('categories')">
       🏷️ Hunt Categories <span class="tab-count" id="cnt-categories">0</span>
@@ -707,13 +827,17 @@ body {
     <button class="tab-btn" data-tab="events" onclick="switchTab('events')">
       📅 Upcoming Events <span class="tab-count" id="cnt-events">0</span>
     </button>
+    <button class="tab-btn" data-tab="collection" onclick="switchTab('collection')">
+      ⭐ My Collection <span class="tab-count" id="cnt-collection">0</span>
+    </button>
     <button class="tab-btn" data-tab="books" onclick="switchTab('books')">
-      📖 Stamp Books <span class="tab-count" id="cnt-books">0</span>
+      📖 My Stamp Books <span class="tab-count" id="cnt-books">0</span>
     </button>
   </nav>
 </header>
 
 <!-- ════ CONTENT ════ -->
+
 <main class="content">
 
   <!-- ── Tab: Directory ── -->
@@ -721,36 +845,36 @@ body {
     <div class="section-header">
       <div class="section-title">Stamp Directory</div>
       <div class="section-actions" id="adminActions">
+        <button class="btn btn-outline" onclick="disablePastEvents()">🕐 Disable Past Events</button>
         <button class="btn btn-gold" onclick="openStampModal()">＋ Add Stamp</button>
       </div>
     </div>
-    <div class="search-bar">
+
+    <!-- Single-row filter bar -->
+    <div class="dir-filter-bar">
       <input class="search-input" type="text" id="dirSearch" placeholder="Search stamps…" oninput="renderDirectory()">
-      <select class="filter-select" id="dirFilterCat" onchange="renderDirectory()" style="min-width:130px">
-        <option value="">All Categories</option>
-      </select>
-      <select class="filter-select" id="dirFilterType" onchange="renderDirectory()" style="min-width:110px">
+      <select class="filter-select" id="dirFilterType" onchange="renderDirectory()" style="width:120px">
         <option value="">All Types</option>
         <option value="Regular">Regular</option>
         <option value="Event">Event</option>
       </select>
-      <select class="filter-select" id="dirFilterStatus" onchange="renderDirectory()" style="min-width:120px">
+      <select class="filter-select" id="dirFilterStatus" onchange="renderDirectory()" style="width:130px">
+        <option value="active" selected>Active Only</option>
         <option value="all">Show All</option>
-        <option value="active">Active Only</option>
         <option value="disabled">Disabled Only</option>
       </select>
     </div>
+
     <div class="card">
       <div style="overflow-x:auto">
         <table class="stamp-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Country / State</th>
-              <th>Category</th>
+              <th>Country</th>
+              <th>State</th>
+              <th>Stamp Name / Location</th>
               <th>Type</th>
-              <th>Location</th>
-              <th>Date Added</th>
+              <th>Created By</th>
               <th style="text-align:right">Actions</th>
             </tr>
           </thead>
@@ -768,12 +892,22 @@ body {
         <span id="collectionStats" style="font-size:.85rem;color:var(--mid);align-self:center"></span>
       </div>
     </div>
-    <div class="search-bar">
+    <div class="dir-filter-bar">
       <input class="search-input" type="text" id="colSearch" placeholder="Search stamps…" oninput="renderCollection()">
-      <select class="filter-select" id="colFilter" onchange="renderCollection()" style="min-width:140px">
+      <select class="filter-select" id="colFilter" onchange="renderCollection()" style="width:150px">
         <option value="all">All Stamps</option>
         <option value="collected">Collected</option>
         <option value="not-collected">Not Collected</option>
+      </select>
+      <select class="filter-select" id="colFilterType" onchange="renderCollection()" style="width:120px">
+        <option value="">All Types</option>
+        <option value="Regular">Regular</option>
+        <option value="Event">Event</option>
+      </select>
+      <select class="filter-select" id="colFilterStatus" onchange="renderCollection()" style="width:130px">
+        <option value="active">Active Only</option>
+        <option value="disabled">Disabled Only</option>
+        <option value="all">Show All</option>
       </select>
     </div>
     <div class="collection-grid" id="collectionGrid"></div>
@@ -803,11 +937,9 @@ body {
       <div class="filter-group">
         <span class="filter-label">Time Window</span>
         <select class="filter-select" id="evWindow" onchange="renderEvents()">
-          <option value="30">Next 30 days</option>
-          <option value="60" selected>Next 60 days</option>
+          <option value="30" selected>Next 30 days</option>
+          <option value="60">Next 60 days</option>
           <option value="90">Next 90 days</option>
-          <option value="180">Next 6 months</option>
-          <option value="365">Next 12 months</option>
         </select>
       </div>
     </div>
@@ -838,10 +970,6 @@ body {
     </div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="form-group form-col-full">
-          <label class="form-label">Stamp Name *</label>
-          <input class="form-input" type="text" id="fStampName" placeholder="e.g. KL Tower Postal Counter">
-        </div>
         <div class="form-group">
           <label class="form-label">Country</label>
           <input class="form-input" type="text" id="fStampCountry" value="Malaysia">
@@ -850,22 +978,24 @@ body {
           <label class="form-label">State</label>
           <input class="form-input" type="text" id="fStampState" value="KL">
         </div>
-        <div class="form-group">
-          <label class="form-label">Category</label>
-          <select class="form-select" id="fStampCategory">
-            <option value="">— Select Category —</option>
-          </select>
+        <div class="form-group form-col-full">
+          <label class="form-label">Stamp Name *</label>
+          <input class="form-input" type="text" id="fStampName" placeholder="e.g. KL Tower Postal Counter">
         </div>
-        <div class="form-group">
+        <div class="form-group form-col-full">
+          <label class="form-label">Address</label>
+          <input class="form-input" type="text" id="fStampAddress" placeholder="e.g. 2, Jalan Punchak, Kuala Lumpur">
+        </div>
+        <div class="form-group form-col-full">
+          <label class="form-label">Created By</label>
+          <input class="form-input" type="text" id="fStampCreatedBy" placeholder="Username">
+        </div>
+        <div class="form-group form-col-full">
           <label class="form-label">Type</label>
-          <select class="form-select" id="fStampType" onchange="toggleEventFields()">
+          <select class="form-select" id="fStampType" onchange="toggleEventFields()" style="max-width:200px">
             <option value="Regular">Regular</option>
             <option value="Event">Event</option>
           </select>
-        </div>
-        <div class="form-group form-col-full">
-          <label class="form-label">Location / Venue</label>
-          <input class="form-input" type="text" id="fStampLocation" placeholder="e.g. Level 2, Main Post Office">
         </div>
         <div class="form-group form-col-full" id="eventFieldsWrap" style="display:none">
           <div class="form-grid">
@@ -887,6 +1017,26 @@ body {
           <label class="form-label">Reference URL</label>
           <input class="form-input" type="url" id="fStampRef" placeholder="https://…">
           <span class="form-hint">Stored for reference, not displayed in directory</span>
+        </div>
+        <div class="form-group form-col-full">
+          <label class="form-label">Rating</label>
+          <div style="display:flex;align-items:center;gap:0">
+            <div class="star-rating" id="fStampStars">
+              <span class="star" data-v="1">★</span>
+              <span class="star" data-v="2">★</span>
+              <span class="star" data-v="3">★</span>
+              <span class="star" data-v="4">★</span>
+              <span class="star" data-v="5">★</span>
+            </div>
+            <span class="star-rating-clear" id="fStampRatingClear" onclick="clearStampRating()" style="display:none">Clear Rating</span>
+          </div>
+        </div>
+        <div class="form-group form-col-full">
+          <label class="form-label">Status</label>
+          <label class="form-check">
+            <input type="checkbox" id="fStampDisabled">
+            Mark as Disabled <span style="font-size:.78rem;color:var(--mid);margin-left:4px">— hides from active directory &amp; collection; still visible in Stamp Books</span>
+          </label>
         </div>
       </div>
     </div>
@@ -911,6 +1061,21 @@ body {
           <input class="form-input" type="text" id="fCatName" placeholder="e.g. Post Office, Museum">
         </div>
         <div class="form-group">
+          <label class="form-label">Colour</label>
+          <div class="color-swatch-row" id="fCatColorRow">
+            <div class="color-swatch" data-color="#4A90D9" style="background:#4A90D9" onclick="selectCatColor('#4A90D9')" title="Blue"></div>
+            <div class="color-swatch" data-color="#27AE60" style="background:#27AE60" onclick="selectCatColor('#27AE60')" title="Green"></div>
+            <div class="color-swatch" data-color="#F5A623" style="background:#F5A623" onclick="selectCatColor('#F5A623')" title="Gold"></div>
+            <div class="color-swatch" data-color="#E74C3C" style="background:#E74C3C" onclick="selectCatColor('#E74C3C')" title="Red"></div>
+            <div class="color-swatch" data-color="#8E44AD" style="background:#8E44AD" onclick="selectCatColor('#8E44AD')" title="Purple"></div>
+            <div class="color-swatch" data-color="#16A085" style="background:#16A085" onclick="selectCatColor('#16A085')" title="Teal"></div>
+            <div class="color-swatch" data-color="#D35400" style="background:#D35400" onclick="selectCatColor('#D35400')" title="Orange"></div>
+            <div class="color-swatch" data-color="#2C3E50" style="background:#2C3E50" onclick="selectCatColor('#2C3E50')" title="Dark"></div>
+            <div class="color-swatch" data-color="#BDC3C7" style="background:#BDC3C7" onclick="selectCatColor('#BDC3C7')" title="Grey"></div>
+          </div>
+          <input type="hidden" id="fCatColor" value="#4A90D9">
+        </div>
+        <div class="form-group">
           <label class="form-label">Created By</label>
           <input class="form-input" type="text" id="fCatCreatedBy" placeholder="Username">
         </div>
@@ -923,7 +1088,7 @@ body {
   </div>
 </div>
 
-<!-- Book Modal (Create / Edit metadata) -->
+<!-- Book Modal -->
 <div class="modal-overlay" id="bookModal">
   <div class="modal">
     <div class="modal-header">
@@ -935,7 +1100,7 @@ body {
         <div class="form-group">
           <label class="form-label">Sequence Number</label>
           <input class="form-input" type="text" id="fBookSeq" placeholder="e.g. 001, A-1, 2024-01">
-          <span class="form-hint">Used to order books in the grid. Enter any value you like.</span>
+          <span class="form-hint">Used to order books in the grid.</span>
         </div>
         <div class="form-group">
           <label class="form-label">Book Name *</label>
@@ -944,6 +1109,10 @@ body {
         <div class="form-group">
           <label class="form-label">Date Created</label>
           <input class="form-input" type="date" id="fBookDate">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes / Comments</label>
+          <textarea class="form-textarea" id="fBookNotes" placeholder="Optional notes about this stamp book…"></textarea>
         </div>
       </div>
     </div>
@@ -954,28 +1123,28 @@ body {
   </div>
 </div>
 
-<!-- Stamp Selector Modal (Manage stamps in a book) -->
+<!-- Stamp Selector Modal -->
 <div class="modal-overlay" id="bookStampsModal">
   <div class="modal modal-xl">
     <div class="modal-header">
       <div>
         <h2 class="modal-title" id="bookStampsModalTitle">Manage Stamps</h2>
-        <div style="font-size:.78rem;color:var(--mid);margin-top:3px">Includes all stamps — past events and disabled locations</div>
+        <div style="font-size:.78rem;color:var(--mid);margin-top:3px">Filter by Hunt Category to quickly find stamps, then select to add to this book</div>
       </div>
       <button class="modal-close" onclick="closeModal('bookStampsModal')">✕</button>
     </div>
     <div class="modal-body">
       <div class="stamp-selector-filters">
-        <input class="search-input" type="text" id="bsSearch" placeholder="Search stamps…" oninput="renderBookStampSelector()" style="max-width:280px;flex:1">
-        <select class="filter-select" id="bsFilterCat" onchange="renderBookStampSelector()" style="min-width:140px">
-          <option value="">All Categories</option>
+        <input class="search-input" type="text" id="bsSearch" placeholder="Search stamps…" oninput="renderBookStampSelector()" style="flex:1;min-width:0">
+        <select class="filter-select" id="bsFilterCat" onchange="renderBookStampSelector()" style="width:140px;flex-shrink:0">
+          <option value="">All Stamps</option>
         </select>
-        <select class="filter-select" id="bsFilterType" onchange="renderBookStampSelector()" style="min-width:110px">
+        <select class="filter-select" id="bsFilterType" onchange="renderBookStampSelector()" style="width:115px;flex-shrink:0">
           <option value="">All Types</option>
           <option value="Regular">Regular</option>
           <option value="Event">Event</option>
         </select>
-        <span class="sel-count" id="bsSelCount"><strong>0</strong> selected</span>
+        <span class="sel-count" id="bsSelCount" style="flex-shrink:0"><strong>0</strong> selected</span>
       </div>
       <div class="stamp-selector-list" id="bookStampSelectorList"></div>
     </div>
@@ -983,6 +1152,41 @@ body {
       <div style="flex:1;font-size:.82rem;color:var(--mid)" id="bsFooterNote"></div>
       <button class="btn btn-outline" onclick="closeModal('bookStampsModal')">Cancel</button>
       <button class="btn btn-primary" onclick="saveBookStamps()">💾 Save Selection</button>
+    </div>
+  </div>
+</div>
+
+<!-- Category Stamps Modal -->
+<div class="modal-overlay" id="catStampsModal">
+  <div class="modal modal-xl">
+    <div class="modal-header">
+      <div>
+        <h2 class="modal-title" id="catStampsModalTitle">Manage Stamps in Category</h2>
+        <div style="font-size:.78rem;color:var(--mid);margin-top:3px">Select stamps to tag to this category — a stamp can belong to multiple categories</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('catStampsModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="stamp-selector-filters">
+        <input class="search-input" type="text" id="csSearch" placeholder="Search stamps…" oninput="renderCatStampSelector()" style="flex:1;min-width:0">
+        <select class="filter-select" id="csFilterType" onchange="renderCatStampSelector()" style="width:115px;flex-shrink:0">
+          <option value="">All Types</option>
+          <option value="Regular">Regular</option>
+          <option value="Event">Event</option>
+        </select>
+        <select class="filter-select" id="csFilterStatus" onchange="renderCatStampSelector()" style="width:125px;flex-shrink:0">
+          <option value="active" selected>Active Only</option>
+          <option value="all">All Stamps</option>
+          <option value="disabled">Disabled Only</option>
+        </select>
+        <span class="sel-count" id="csSelCount" style="flex-shrink:0"><strong>0</strong> tagged</span>
+      </div>
+      <div class="stamp-selector-list" id="catStampSelectorList"></div>
+    </div>
+    <div class="modal-footer">
+      <div style="flex:1;font-size:.82rem;color:var(--mid)" id="csFooterNote"></div>
+      <button class="btn btn-outline" onclick="closeModal('catStampsModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCatStamps()">💾 Save Tags</button>
     </div>
   </div>
 </div>
@@ -996,14 +1200,12 @@ body {
     </div>
     <div class="modal-body">
 
-      <!-- EXPORT -->
       <div class="io-section">
         <div class="io-section-header">
           <span style="font-size:1.1rem">📤</span>
           <span class="io-section-title">Export Data</span>
         </div>
         <div class="io-section-body">
-
           <div class="io-row">
             <div class="io-row-info">
               <div class="io-row-label">Full Backup (JSON)</div>
@@ -1011,35 +1213,17 @@ body {
             </div>
             <button class="btn btn-primary btn-sm" onclick="exportJSON()">⬇ Download JSON</button>
           </div>
-
           <hr class="io-divider">
-
           <div class="io-row">
             <div class="io-row-info">
               <div class="io-row-label">Stamp Directory (CSV)</div>
-              <div class="io-row-desc">All active stamps in spreadsheet format — open in Excel or Google Sheets</div>
+              <div class="io-row-desc">All stamps in spreadsheet format — open in Excel or Google Sheets</div>
             </div>
             <button class="btn btn-outline btn-sm" onclick="exportCSV()">⬇ Download CSV</button>
           </div>
-
-          <hr class="io-divider">
-
-          <div>
-            <div class="io-row" style="margin-bottom:10px">
-              <div class="io-row-info">
-                <div class="io-row-label">PDF Export by Hunt Category</div>
-                <div class="io-row-desc">Generates a printable stamp list for each category — opens print dialog</div>
-              </div>
-            </div>
-            <div class="cat-pdf-list" id="catPdfList">
-              <div style="font-size:.82rem;color:var(--mid);text-align:center;padding:8px">Loading categories…</div>
-            </div>
-          </div>
-
         </div>
       </div>
 
-      <!-- IMPORT -->
       <div class="io-section">
         <div class="io-section-header">
           <span style="font-size:1.1rem">📥</span>
@@ -1060,8 +1244,6 @@ body {
               <input type="file" accept=".json,application/json" id="importFileInput" style="display:none" onchange="scanImportFile(event)">
             </label>
           </div>
-
-          <!-- Preview panel — shown after file is scanned, hidden otherwise -->
           <div id="importPreview" style="display:none;margin-top:4px;border:1.5px solid var(--border);border-radius:8px;overflow:hidden">
             <div style="background:var(--cloud);padding:10px 14px;border-bottom:1.5px solid var(--border);font-size:.78rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.05em">
               File Contents
@@ -1073,7 +1255,6 @@ body {
               <span id="importPreviewWarning" style="font-size:.76rem;color:var(--red)"></span>
             </div>
           </div>
-
           <div id="importStatus" style="font-size:.82rem;margin-top:4px"></div>
         </div>
       </div>
@@ -1102,25 +1283,20 @@ body {
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <!-- ════ SCRIPT ════ -->
 <script>
-// ── Standalone: all data in localStorage, no server required ──────────────────
-
 const USERS = [
-  { id: 'ymlee.admin', label: 'ymlee.admin', initials: 'YM', cls: 'ymlee',  isAdmin: true  },
-  { id: 'calvin.lee',  label: 'calvin.lee',  initials: 'CL', cls: 'calvin', isAdmin: false },
+  { id: 'ymlee.admin', label: 'ymlee.admin', initials: 'YM', cls: 'ymlee'  },
+  { id: 'calvin.lee',  label: 'calvin.lee',  initials: 'CL', cls: 'calvin' },
 ];
 
-// ── UUID ──────────────────────────────────────────────────────────────────────
 function uuidv4() {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
 }
 
-// ── localStorage layer ────────────────────────────────────────────────────────
 const STORE_KEY = 'souvenir-stamps-v3';
 
 function loadFromStorage() {
@@ -1144,7 +1320,6 @@ function saveToStorage(data) {
   catch(e) { showToast('Storage may be full — data not saved', 'error'); }
 }
 
-// ── App state ─────────────────────────────────────────────────────────────────
 const state = {
   currentUser:  'ymlee.admin',
   stamps:       [],
@@ -1157,9 +1332,11 @@ const state = {
   editBookId:   null,
   bsBookId:     null,
   bsSelected:   new Set(),
+  csCatId:      null,
+  csSelected:   new Set(),
+  dirCatFilter: null,
 };
 
-// ── Bootstrap ─────────────────────────────────────────────────────────────────
 window.addEventListener('click', e => {
   const dd  = document.getElementById('userDropdown');
   const btn = document.getElementById('userSelectorBtn');
@@ -1180,13 +1357,11 @@ function init() {
   renderAll();
 }
 
-// ── Sync load helpers ─────────────────────────────────────────────────────────
 function loadStamps()     { state.stamps       = loadFromStorage().stamps; }
 function loadCategories() { state.categories   = loadFromStorage().categories; }
 function loadCollection() { state.myCollection = loadFromStorage().collections[state.currentUser] || []; }
 function loadBooks()      { state.myBooks       = sortBooks(loadFromStorage().stampBooks[state.currentUser] || []); }
 
-// ── Render all ────────────────────────────────────────────────────────────────
 function renderAll() {
   renderDirectory();
   renderCollection();
@@ -1205,18 +1380,19 @@ function updateCounts() {
   document.getElementById('cnt-books').textContent      = state.myBooks.length;
 
   const today    = todayStr();
-  const win60    = datePlusDays(today, 60);
+  const win30    = datePlusDays(today, 30);
   const evCtry   = (document.getElementById('evCountry')?.value || 'malaysia').toLowerCase();
   const evCount  = state.stamps.filter(s => {
     if (!s.isEvent || s.isDisabled) return false;
     if (evCtry && (s.country||'').toLowerCase() !== evCtry) return false;
-    const end = s.eventEndDate || s.eventDate || '';
-    return end >= today && (s.eventDate||'') <= win60;
+    const start = s.eventDate || '';
+    const end   = s.eventEndDate || '';
+    if (end) return end >= today && start <= win30;
+    return !start || start <= win30;
   }).length;
   document.getElementById('cnt-events').textContent = evCount;
 }
 
-// ── Tab switching ─────────────────────────────────────────────────────────────
 function switchTab(tab) {
   state.currentTab = tab;
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -1225,7 +1401,6 @@ function switchTab(tab) {
   document.querySelector('.tab-btn[data-tab="' + tab + '"]').classList.add('active');
 }
 
-// ── User switching ────────────────────────────────────────────────────────────
 function toggleUserDropdown() {
   document.getElementById('userDropdown').classList.toggle('open');
 }
@@ -1240,8 +1415,6 @@ function switchUser(uid) {
   document.querySelectorAll('.user-dropdown-item').forEach(el =>
     el.classList.toggle('active', el.dataset.user === uid));
   document.getElementById('userDropdown').classList.remove('open');
-  document.querySelectorAll('#adminActions').forEach(el =>
-    el.style.display = u.isAdmin ? '' : 'none');
   loadCollection();
   loadBooks();
   renderCollection();
@@ -1249,17 +1422,15 @@ function switchUser(uid) {
   updateCounts();
 }
 
-// ── Directory ─────────────────────────────────────────────────────────────────
 function renderDirectory() {
   const q      = (document.getElementById('dirSearch').value || '').toLowerCase();
-  const cat    = document.getElementById('dirFilterCat').value;
   const type   = document.getElementById('dirFilterType').value;
   const status = document.getElementById('dirFilterStatus').value;
 
   const filtered = state.stamps.filter(s => {
+    if (state.dirCatFilter && !state.dirCatFilter.has(s.id)) return false;
     if (status === 'active'   &&  s.isDisabled) return false;
     if (status === 'disabled' && !s.isDisabled) return false;
-    if (cat  && s.category !== cat) return false;
     if (type === 'Regular' &&  s.isEvent) return false;
     if (type === 'Event'   && !s.isEvent) return false;
     if (q) {
@@ -1269,73 +1440,84 @@ function renderDirectory() {
     return true;
   });
 
-  const isAdmin = USERS.find(u => u.id === state.currentUser)?.isAdmin;
-  const tbody   = document.getElementById('directoryBody');
+  filtered.sort((a, b) => {
+    const cmp = (a.country||'').localeCompare(b.country||'');
+    if (cmp !== 0) return cmp;
+    const scmp = (a.state||'').localeCompare(b.state||'');
+    if (scmp !== 0) return scmp;
+    return (a.name||'').localeCompare(b.name||'');
+  });
+
+  const tbody = document.getElementById('directoryBody');
 
   if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">🔍</div><h3>No stamps found</h3><p>Try adjusting your filters</p></div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">🔍</div><h3>No stamps found</h3><p>Try adjusting your filters</p></div></td></tr>';
     return;
   }
 
   tbody.innerHTML = filtered.map(s => {
-    const col  = state.myCollection.includes(s.id);
-    const tb   = s.isEvent
+    const tb  = s.isEvent
       ? '<span class="badge badge-event">Event</span>'
       : '<span class="badge badge-regular">Regular</span>';
     const db   = s.isDisabled ? '<span class="badge badge-disabled">Disabled</span>' : '';
-    const cb   = col          ? '<span class="badge badge-collected">✓ Collected</span>' : '';
-    const acts = isAdmin
-      ? '<button class="btn-icon" onclick="openStampModal(\'' + s.id + '\')" title="Edit">✏️</button>'
-        + (!s.isDisabled ? '<button class="btn-icon danger" onclick="disableStamp(\'' + s.id + '\')" title="Disable">🗑️</button>' : '')
-      : '';
+    const acts = '<button class="btn-icon-sm" onclick="openStampModal(\'' + s.id + '\')" title="Edit">✏️</button>'
+      + (!s.isDisabled ? '<button class="btn-icon-sm danger" onclick="disableStamp(\'' + s.id + '\')" title="Disable">🗑️</button>' : '');
     return '<tr class="' + (s.isDisabled ? 'disabled' : '') + '">'
-      + '<td><strong>' + esc(s.name) + '</strong> ' + cb + '</td>'
-      + '<td>' + esc(s.country) + (s.state ? ' · ' + esc(s.state) : '') + '</td>'
-      + '<td>' + esc(s.category) + '</td>'
+      + '<td>' + esc(s.country) + '</td>'
+      + '<td>' + esc(s.state) + '</td>'
+      + '<td><strong>' + esc(s.name) + '</strong>' + (s.rating ? ' ' + starsHtml(s.rating) : '') + '</td>'
       + '<td>' + tb + ' ' + db + '</td>'
-      + '<td>' + esc(s.location) + '</td>'
-      + '<td style="white-space:nowrap;color:var(--mid);font-size:.78rem">' + (s.dateAdded||'') + '</td>'
+      + '<td style="font-size:.78rem;color:var(--mid)">' + esc(s.createdBy || '') + '</td>'
       + '<td style="text-align:right;white-space:nowrap">' + acts + '</td>'
       + '</tr>';
   }).join('');
 }
 
-// ── My Collection ─────────────────────────────────────────────────────────────
 function renderCollection() {
   const u = USERS.find(x => x.id === state.currentUser);
   document.getElementById('collectionTitle').textContent = u.label + "'s Collection";
 
   const q      = (document.getElementById('colSearch').value || '').toLowerCase();
   const filter = document.getElementById('colFilter').value;
+  const type   = document.getElementById('colFilterType').value;
+  const status = document.getElementById('colFilterStatus').value;
 
   const stamps = state.stamps.filter(s => {
-    if (s.isDisabled) return false;
+    if (status === 'active'   &&  s.isDisabled) return false;
+    if (status === 'disabled' && !s.isDisabled) return false;
+    if (type === 'Regular' &&  s.isEvent) return false;
+    if (type === 'Event'   && !s.isEvent) return false;
     const col = state.myCollection.includes(s.id);
     if (filter === 'collected'     && !col) return false;
     if (filter === 'not-collected' &&  col) return false;
     if (q) {
-      const hay = (s.name+' '+s.country+' '+s.state+' '+s.category).toLowerCase();
+      const hay = (s.name+' '+s.country+' '+s.state).toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
   });
 
-  const total = state.stamps.filter(s => !s.isDisabled).length;
+  const activeTotal = state.stamps.filter(s => !s.isDisabled).length;
   document.getElementById('collectionStats').textContent =
-    state.myCollection.length + ' / ' + total + ' collected';
+    state.myCollection.length + ' / ' + activeTotal + ' collected';
 
   const grid = document.getElementById('collectionGrid');
   if (!stamps.length) {
-    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⭐</div><h3>Nothing here</h3><p>Tap a stamp to toggle collected status</p></div>';
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⭐</div><h3>Nothing here</h3><p>Try adjusting your filters</p></div>';
     return;
   }
   grid.innerHTML = stamps.map(s => {
     const col = state.myCollection.includes(s.id);
-    return '<div class="collection-item ' + (col ? 'collected' : '') + '" onclick="toggleCollected(\'' + s.id + '\')">'
+    const typeBadge = s.isEvent
+      ? '<span class="badge badge-event" style="font-size:.68rem;padding:2px 7px">Event</span>'
+      : '';
+    const disBadge = s.isDisabled
+      ? '<span class="badge badge-disabled" style="font-size:.68rem;padding:2px 7px">Disabled</span>'
+      : '';
+    return '<div class="collection-item ' + (col ? 'collected' : '') + (s.isDisabled ? ' disabled' : '') + '" onclick="toggleCollected(\'' + s.id + '\')">'
       + '<div class="collection-check">' + (col ? '✓' : '') + '</div>'
       + '<div class="ci-name">' + esc(s.name) + '</div>'
-      + '<div class="ci-meta">' + esc(s.country) + (s.state ? ' · ' + esc(s.state) : '') + '</div>'
-      + (s.category ? '<div class="ci-meta" style="margin-top:2px">' + esc(s.category) + '</div>' : '')
+      + '<div class="ci-meta">📍 ' + esc(s.country) + (s.state ? ' · ' + esc(s.state) : '') + (s.isEvent ? ' · <em>Event</em>' : '') + '</div>'
       + '</div>';
   }).join('');
 }
@@ -1351,43 +1533,63 @@ function toggleCollected(stampId) {
   updateCounts();
 }
 
-// ── Hunt Categories ───────────────────────────────────────────────────────────
 function renderCategories() {
   const grid = document.getElementById('catGrid');
   if (!state.categories.length) {
-    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🏷️</div><h3>No categories yet</h3><p>Add hunt categories to organise your stamps</p></div>';
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🏷️</div><h3>No categories yet</h3><p>Add a hunt category, then tag stamps to it</p></div>';
     return;
   }
   grid.innerHTML = state.categories.map(c => {
-    const n = state.stamps.filter(s => s.category === c.name && !s.isDisabled).length;
+    const ids    = c.stampIds || [];
+    const active = ids.filter(id => { const s = state.stamps.find(x => x.id === id); return s && !s.isDisabled; }).length;
+    const total  = ids.length;
+    const color  = c.color || '#4A90D9';
+    // Derive a light tint for the header background
+    const topBg  = color + '22';  // 13% opacity hex tint
     return '<div class="cat-card">'
-      + '<div class="cat-card-top"><span class="cat-name">' + esc(c.name) + '</span>'
+      + '<div class="cat-card-top" style="background:linear-gradient(135deg,' + color + '18 0%,' + color + '30 100%);border-bottom-color:' + color + '44">'
+      + '<span class="cat-name" style="color:' + color + '">' + esc(c.name) + '</span>'
       + '<div class="cat-actions">'
+      + '<button class="btn-icon" onclick="openCatStampsModal(\'' + c.id + '\')" title="Tag Stamps">🏷️</button>'
       + '<button class="btn-icon" onclick="openCatModal(\'' + c.id + '\')" title="Edit">✏️</button>'
       + '<button class="btn-icon danger" onclick="deleteCat(\'' + c.id + '\',\'' + esc(c.name) + '\')" title="Delete">🗑️</button>'
       + '</div></div>'
-      + '<div class="cat-body">'
-      + '<span>📌 <strong>' + n + '</strong> active stamps</span>'
-      + (c.createdBy   ? '<span>👤 ' + esc(c.createdBy) + '</span>'   : '')
-      + (c.dateCreated ? '<span>📅 ' + c.dateCreated + '</span>'       : '')
-      + '</div></div>';
+      + '<div class="cat-footer">'
+      + '<span class="cat-stamp-count"><strong>' + total + '</strong> stamp' + (total!==1?'s':'') + ' tagged'
+        + (active < total ? ' <span style="opacity:.55;font-size:.7rem">(' + active + ' active)</span>' : '') + '</span>'
+      + '<button class="btn btn-outline btn-sm" onclick="exportCategoryPDF(\'' + c.id + '\')"' + (total===0?' disabled style="opacity:.4;cursor:not-allowed"':'') + '>🖨️</button>'
+      + '</div>'
+      + '</div>';
   }).join('');
 }
 
-// ── Upcoming Events ───────────────────────────────────────────────────────────
 function renderEvents() {
   const country = (document.getElementById('evCountry').value || '').toLowerCase().trim();
-  const winDays = parseInt(document.getElementById('evWindow').value) || 60;
+  const winDays = parseInt(document.getElementById('evWindow').value) || 30;
   const today   = todayStr();
   const limit   = datePlusDays(today, winDays);
 
   const events = state.stamps.filter(s => {
-    if (!s.isEvent) return false;
+    if (!s.isEvent || s.isDisabled) return false;
     if (country && (s.country||'').toLowerCase() !== country) return false;
     const start = s.eventDate || '';
-    const end   = s.eventEndDate || start;
-    return end >= today && start <= limit;
-  }).sort((a, b) => (a.eventDate||'').localeCompare(b.eventDate||''));
+    const end   = s.eventEndDate || '';
+    if (end) {
+      // Has end date — show only if not yet past and starts within window
+      return end >= today && start <= limit;
+    } else {
+      // No end date — include if start is within window (or no start date)
+      return !start || start <= limit;
+    }
+  }).sort((a, b) => {
+    const endA = a.eventEndDate || '';
+    const endB = b.eventEndDate || '';
+    // Empty end dates sort to the bottom
+    if (!endA && !endB) return (a.eventDate||'').localeCompare(b.eventDate||'');
+    if (!endA) return 1;
+    if (!endB) return -1;
+    return endA.localeCompare(endB);
+  });
 
   updateCounts();
   const body = document.getElementById('eventsBody');
@@ -1399,21 +1601,23 @@ function renderEvents() {
     const d     = s.eventDate ? new Date(s.eventDate + 'T00:00:00') : null;
     const month = d ? d.toLocaleString('en', { month: 'short' }).toUpperCase() : '—';
     const day   = d ? d.getDate() : '—';
-    const end   = s.eventEndDate && s.eventEndDate !== s.eventDate ? ' → ' + s.eventEndDate : '';
+    const endDisplay = s.eventEndDate
+      ? '<strong>' + s.eventEndDate + '</strong>'
+      : '<span style="color:var(--light)">no end date</span>';
+    const startDisplay = s.eventDate || '';
+    const dateSpan = startDisplay
+      ? '📅 ' + startDisplay + ' → ' + endDisplay
+      : '📅 ' + endDisplay;
     return '<div class="event-card">'
-      + '<div class="event-date-badge"><div class="month">' + month + '</div><div class="day">' + day + '</div></div>'
       + '<div class="event-info">'
       + '<div class="event-name">' + esc(s.name) + '</div>'
       + '<div class="event-meta">'
       + '<span>📍 ' + esc(s.country) + (s.state ? ' · ' + esc(s.state) : '') + '</span>'
-      + (s.location ? '<span>🏢 ' + esc(s.location) + '</span>' : '')
-      + '<span>📅 ' + (s.eventDate||'') + end + '</span>'
-      + (s.category ? '<span>🏷️ ' + esc(s.category) + '</span>' : '')
+      + '<span>' + dateSpan + '</span>'
       + '</div></div></div>';
   }).join('');
 }
 
-// ── Stamp Books ───────────────────────────────────────────────────────────────
 function renderBooks() {
   const u = USERS.find(x => x.id === state.currentUser);
   document.getElementById('booksTitle').textContent = u.label + "'s Stamp Books";
@@ -1426,37 +1630,46 @@ function renderBooks() {
   grid.innerHTML = state.myBooks.map(book => {
     const count = (book.stampIds || []).length;
     return '<div class="book-card">'
+      /* Row 1: seq + name + action icons */
       + '<div class="book-card-top">'
-      + (book.sequenceNumber ? '<div class="book-seq"># ' + esc(book.sequenceNumber) + '</div>' : '')
-      + '<div class="book-icon">📖</div>'
+      + '<div class="book-title-wrap">'
+      + (book.sequenceNumber ? '<div class="book-seq-inline"># ' + esc(book.sequenceNumber) + '</div>' : '')
       + '<div class="book-name">' + esc(book.bookName) + '</div>'
-      + (book.dateCreated ? '<div class="book-date">Created ' + formatDate(book.dateCreated) + '</div>' : '')
       + '</div>'
-      + '<div class="book-card-body">'
-      + '<div class="book-stamp-count"><span>🏷️</span><strong>' + count + '</strong><span>stamp' + (count!==1?'s':'') + ' in this book</span></div>'
-      + '<div class="book-actions">'
-      + '<button class="btn btn-outline btn-sm" onclick="openBookModal(\'' + book.id + '\')">✏️ Edit</button>'
-      + '<button class="btn btn-primary btn-sm" onclick="openBookStampsModal(\'' + book.id + '\')">📋 Stamps</button>'
-      + '<button class="btn-icon danger" onclick="deleteBook(\'' + book.id + '\',\'' + esc(book.bookName) + '\')" style="flex-shrink:0">🗑️</button>'
-      + '</div></div></div>';
+      + '<div class="book-card-actions">'
+      + '<button class="btn-icon" onclick="openBookStampsModal(\'' + book.id + '\')" title="Manage Stamps">📋</button>'
+      + '<button class="btn-icon" onclick="openBookModal(\'' + book.id + '\')" title="Edit">✏️</button>'
+      + '<button class="btn-icon danger" onclick="deleteBook(\'' + book.id + '\',\'' + esc(book.bookName) + '\')" title="Delete">🗑️</button>'
+      + '</div>'
+      + '</div>'
+      /* Row 2: notes + stamp count + PDF */
+      + '<div class="book-card-footer">'
+      + '<div class="book-footer-info">'
+      + (book.notes ? '<div class="book-notes-preview">' + esc(book.notes) + '</div>' : '')
+      + '<div class="book-stamp-count"><strong>' + count + '</strong> stamp' + (count!==1?'s':'') + ' tagged</div>'
+      + '</div>'
+      + '<button class="btn btn-outline btn-sm" onclick="exportBookPDF(\'' + book.id + '\')"' + (count===0?' disabled style="opacity:.4;cursor:not-allowed"':'') + '>🖨️</button>'
+      + '</div>'
+      + '</div>';
   }).join('');
 }
 
-// ── Book modal ────────────────────────────────────────────────────────────────
 function openBookModal(bookId) {
   state.editBookId = bookId || null;
   const book = bookId ? state.myBooks.find(b => b.id === bookId) : null;
   document.getElementById('bookModalTitle').textContent = book ? 'Edit Stamp Book' : 'New Stamp Book';
-  document.getElementById('fBookSeq').value  = book ? (book.sequenceNumber || '') : '';
-  document.getElementById('fBookName').value = book ? (book.bookName || '') : '';
-  document.getElementById('fBookDate').value = book ? (book.dateCreated || todayStr()) : todayStr();
+  document.getElementById('fBookSeq').value   = book ? (book.sequenceNumber || '') : '';
+  document.getElementById('fBookName').value  = book ? (book.bookName || '') : '';
+  document.getElementById('fBookDate').value  = book ? (book.dateCreated || todayStr()) : todayStr();
+  document.getElementById('fBookNotes').value = book ? (book.notes || '') : '';
   openModal('bookModal');
 }
 
 function saveBook() {
-  const seq  = document.getElementById('fBookSeq').value.trim();
-  const name = document.getElementById('fBookName').value.trim();
-  const date = document.getElementById('fBookDate').value;
+  const seq   = document.getElementById('fBookSeq').value.trim();
+  const name  = document.getElementById('fBookName').value.trim();
+  const date  = document.getElementById('fBookDate').value;
+  const notes = document.getElementById('fBookNotes').value.trim();
   if (!name) { showToast('Please enter a book name', 'error'); return; }
 
   const d = loadFromStorage();
@@ -1465,10 +1678,10 @@ function saveBook() {
 
   if (state.editBookId) {
     const idx = books.findIndex(b => b.id === state.editBookId);
-    if (idx >= 0) books[idx] = { ...books[idx], sequenceNumber: seq, bookName: name, dateCreated: date };
+    if (idx >= 0) books[idx] = { ...books[idx], sequenceNumber: seq, bookName: name, dateCreated: date, notes };
     showToast('Book updated ✓', 'success');
   } else {
-    books.push({ id: uuidv4(), sequenceNumber: seq, bookName: name, dateCreated: date, stampIds: [] });
+    books.push({ id: uuidv4(), sequenceNumber: seq, bookName: name, dateCreated: date, notes, stampIds: [] });
     showToast('Book created ✓', 'success');
   }
   saveToStorage(d);
@@ -1476,6 +1689,67 @@ function saveBook() {
   closeModal('bookModal');
   renderBooks();
   updateCounts();
+}
+
+function exportBookPDF(bookId) {
+  const book = state.myBooks.find(b => b.id === bookId);
+  if (!book) return;
+  const ids    = book.stampIds || [];
+  const stamps = state.stamps.filter(s => ids.includes(s.id)).sort((a,b) => a.name.localeCompare(b.name));
+  if (!stamps.length) { showToast('No stamps in this book', 'error'); return; }
+  const today = todayStr();
+
+  const rows = stamps.map((s, i) => {
+    const isEvent   = s.isEvent;
+    const isPast    = isEvent && (s.eventEndDate || s.eventDate || '') < today;
+    const status    = s.isDisabled ? 'Disabled' : isPast ? 'Past Event' : isEvent ? 'Event' : 'Active';
+    const statusCol = s.isDisabled ? '#999' : isPast ? '#8E44AD' : isEvent ? '#D48B10' : '#27AE60';
+    const eventDates = isEvent
+      ? (s.eventDate || '') + (s.eventEndDate && s.eventEndDate !== s.eventDate ? ' → ' + s.eventEndDate : '')
+      : '—';
+    const bg = i % 2 === 0 ? '#f8f9fa' : '#fff';
+    const td = 'padding:6px 10px;border-bottom:1px solid #e0e6ed;font-size:13px';
+    return '<tr style="background:' + bg + '">'
+      + '<td style="' + td + ';width:32px;color:#5D6D7E">' + (i+1) + '</td>'
+      + '<td style="' + td + ';font-weight:600">' + esc(s.name) + '</td>'
+      + '<td style="' + td + '">' + esc(s.country) + (s.state ? ' · ' + esc(s.state) : '') + '</td>'
+      + '<td style="' + td + '">' + eventDates + '</td>'
+      + '<td style="' + td + ';color:' + statusCol + '">' + status + '</td>'
+      + '</tr>';
+  }).join('');
+
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + esc(book.bookName) + ' — Souvenir Stamps</title>'
+    + '<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">'
+    + '<style>'
+    + 'body{font-family:\'Figtree\',sans-serif;margin:0;padding:32px 40px;color:#2C3E50}'
+    + 'h1{font-family:\'DM Serif Display\',serif;font-size:26px;margin-bottom:4px}'
+    + '.sub{font-size:12px;color:#5D6D7E;margin-bottom:6px}'
+    + '.notes{font-size:12px;color:#5D6D7E;margin-bottom:20px;font-style:italic}'
+    + 'table{width:100%;border-collapse:collapse}'
+    + 'th{background:#4A90D9;color:#fff;padding:7px 10px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}'
+    + '.footer{margin-top:28px;font-size:11px;color:#BDC3C7;border-top:1px solid #E0E6ED;padding-top:10px}'
+    + '@media print{body{padding:16px 20px}}'
+    + '</style></head><body>'
+    + '<h1>' + esc(book.bookName) + (book.sequenceNumber ? ' <span style="font-size:16px;color:#4A90D9"># ' + esc(book.sequenceNumber) + '</span>' : '') + '</h1>'
+    + '<div class="sub">Souvenir Stamps · Stamp Book &nbsp;·&nbsp; '
+    + new Date().toLocaleDateString('en-MY', {day:'numeric', month:'long', year:'numeric'})
+    + ' &nbsp;·&nbsp; ' + stamps.length + ' stamp' + (stamps.length !== 1 ? 's' : '')
+    + (book.dateCreated ? ' &nbsp;·&nbsp; ' + formatDate(book.dateCreated) : '') + '</div>'
+    + (book.notes ? '<div class="notes">' + esc(book.notes) + '</div>' : '')
+    + '<table><thead><tr>'
+    + '<th style="width:32px">#</th>'
+    + '<th>Stamp Name / Location</th>'
+    + '<th>Country / State</th>'
+    + '<th>Event Dates</th>'
+    + '<th>Status</th>'
+    + '</tr></thead><tbody>' + rows + '</tbody></table>'
+    + '<div class="footer">Souvenir Stamps v3 · ' + esc(state.currentUser) + '</div>'
+    + '<script>window.onload=function(){window.print();}<\/script>'
+    + '</body></html>';
+
+  const win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
 }
 
 function deleteBook(bookId, name) {
@@ -1490,7 +1764,6 @@ function deleteBook(bookId, name) {
   });
 }
 
-// ── Book stamps modal ─────────────────────────────────────────────────────────
 function openBookStampsModal(bookId) {
   state.bsBookId = bookId;
   const book = state.myBooks.find(b => b.id === bookId);
@@ -1498,28 +1771,35 @@ function openBookStampsModal(bookId) {
   document.getElementById('bookStampsModalTitle').textContent = 'Stamps in "' + book.bookName + '"';
   state.bsSelected = new Set(book.stampIds || []);
 
+  // Populate hunt category filter — filters by stamps tagged to that category
   const catSel = document.getElementById('bsFilterCat');
-  catSel.innerHTML = '<option value="">All Categories</option>'
-    + state.categories.map(c => '<option value="' + esc(c.name) + '">' + esc(c.name) + '</option>').join('');
-  document.getElementById('bsSearch').value = '';
-  document.getElementById('bsFilterType').value = '';
+  catSel.innerHTML = '<option value="">All Stamps</option>'
+    + state.categories.map(c => '<option value="' + esc(c.id) + '">' + esc(c.name) + '</option>').join('');
+  document.getElementById('bsSearch').value      = '';
+  document.getElementById('bsFilterCat').value   = '';
+  document.getElementById('bsFilterType').value  = '';
 
   renderBookStampSelector();
   openModal('bookStampsModal');
 }
 
 function renderBookStampSelector() {
-  const q    = (document.getElementById('bsSearch').value || '').toLowerCase();
-  const cat  = document.getElementById('bsFilterCat').value;
-  const type = document.getElementById('bsFilterType').value;
+  const q     = (document.getElementById('bsSearch').value || '').toLowerCase();
+  const catId = document.getElementById('bsFilterCat').value;
+  const type  = document.getElementById('bsFilterType').value;
   const today = todayStr();
 
+  // If a hunt category is selected, get its stampIds for filtering
+  const catFilter = catId
+    ? new Set((state.categories.find(c => c.id === catId) || {}).stampIds || [])
+    : null;
+
   const stamps = state.stamps.filter(s => {
-    if (cat  && s.category !== cat) return false;
+    if (catFilter && !catFilter.has(s.id)) return false;
     if (type === 'Regular' &&  s.isEvent) return false;
     if (type === 'Event'   && !s.isEvent) return false;
     if (q) {
-      const hay = (s.name+' '+s.country+' '+s.state+' '+s.location+' '+s.category).toLowerCase();
+      const hay = (s.name+' '+s.country+' '+s.state+' '+s.location).toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -1586,26 +1866,23 @@ function saveBookStamps() {
   showToast('Saved ' + stampIds.length + ' stamp' + (stampIds.length!==1?'s':'') + ' ✓', 'success');
 }
 
-// ── Stamp modal ───────────────────────────────────────────────────────────────
 function openStampModal(stampId) {
   state.editStampId = stampId || null;
   const s = stampId ? state.stamps.find(x => x.id === stampId) : null;
   document.getElementById('stampModalTitle').textContent = s ? 'Edit Stamp' : 'Add Stamp';
-  document.getElementById('fStampName').value        = s ? s.name        : '';
-  document.getElementById('fStampCountry').value     = s ? s.country     : 'Malaysia';
-  document.getElementById('fStampState').value       = s ? s.state       : 'KL';
-  document.getElementById('fStampLocation').value    = s ? (s.location    || '') : '';
-  document.getElementById('fStampDesc').value        = s ? (s.description || '') : '';
-  document.getElementById('fStampRef').value         = s ? (s.referenceUrl|| '') : '';
-  document.getElementById('fStampType').value        = s ? (s.isEvent ? 'Event' : 'Regular') : 'Regular';
-  document.getElementById('fStampEventDate').value    = s ? (s.eventDate    || '') : '';
-  document.getElementById('fStampEventEndDate').value = s ? (s.eventEndDate || '') : '';
-
-  const catSel = document.getElementById('fStampCategory');
-  catSel.innerHTML = '<option value="">— Select Category —</option>'
-    + state.categories.map(c => '<option value="' + esc(c.name) + '">' + esc(c.name) + '</option>').join('');
-  catSel.value = s ? (s.category || '') : '';
-
+  document.getElementById('fStampName').value           = s ? s.name           : '';
+  document.getElementById('fStampAddress').value        = s ? (s.address    || '') : '';
+  document.getElementById('fStampCreatedBy').value      = s ? (s.createdBy  || '') : state.currentUser;
+  document.getElementById('fStampCountry').value        = s ? s.country     : 'Malaysia';
+  document.getElementById('fStampState').value          = s ? s.state       : 'KL';
+  document.getElementById('fStampDesc').value           = s ? (s.description || '') : '';
+  document.getElementById('fStampRef').value            = s ? (s.referenceUrl|| '') : '';
+  document.getElementById('fStampType').value           = s ? (s.isEvent ? 'Event' : 'Regular') : 'Regular';
+  document.getElementById('fStampEventDate').value      = s ? (s.eventDate    || '') : '';
+  document.getElementById('fStampEventEndDate').value   = s ? (s.eventEndDate || '') : '';
+  document.getElementById('fStampDisabled').checked     = s ? !!s.isDisabled : false;
+  _currentRating = s ? (parseInt(s.rating) || 0) : 0;
+  updateStarDisplay();
   toggleEventFields();
   openModal('stampModal');
 }
@@ -1622,16 +1899,17 @@ function saveStamp() {
 
   const payload = {
     name,
+    address:      document.getElementById('fStampAddress').value.trim(),
+    createdBy:    document.getElementById('fStampCreatedBy').value.trim(),
     country:      document.getElementById('fStampCountry').value.trim(),
     state:        document.getElementById('fStampState').value.trim(),
-    category:     document.getElementById('fStampCategory').value,
-    type:         document.getElementById('fStampType').value,
-    location:     document.getElementById('fStampLocation').value.trim(),
     description:  document.getElementById('fStampDesc').value.trim(),
     referenceUrl: document.getElementById('fStampRef').value.trim(),
     isEvent,
     eventDate:    isEvent ? document.getElementById('fStampEventDate').value : '',
     eventEndDate: isEvent ? document.getElementById('fStampEventEndDate').value : '',
+    isDisabled:   document.getElementById('fStampDisabled').checked,
+    rating:       _currentRating || null,
   };
 
   const d = loadFromStorage();
@@ -1640,13 +1918,40 @@ function saveStamp() {
     if (idx >= 0) d.stamps[idx] = { ...d.stamps[idx], ...payload, id: state.editStampId };
     showToast('Stamp updated ✓', 'success');
   } else {
-    d.stamps.push({ id: uuidv4(), ...payload, isDisabled: false, dateAdded: todayStr() });
+    d.stamps.push({ id: uuidv4(), ...payload, dateAdded: todayStr() });
     showToast('Stamp added ✓', 'success');
   }
   saveToStorage(d);
   loadStamps();
   closeModal('stampModal');
   renderAll();
+}
+
+function disablePastEvents() {
+  const today = todayStr();
+  const d     = loadFromStorage();
+  let count   = 0;
+
+  d.stamps.forEach(s => {
+    if (!s.isEvent || s.isDisabled) return;
+    // Past = event end date is strictly before today
+    // (e.g. end date 7 Mar is past from 8 Mar onwards)
+    const end = s.eventEndDate || s.eventDate || '';
+    if (end && end < today) {
+      s.isDisabled = true;
+      count++;
+    }
+  });
+
+  if (count === 0) {
+    showToast('No active past events found', '');
+    return;
+  }
+
+  saveToStorage(d);
+  loadStamps();
+  renderAll();
+  showToast(count + ' past event' + (count !== 1 ? 's' : '') + ' disabled ✓', 'success');
 }
 
 function disableStamp(stampId) {
@@ -1662,54 +1967,170 @@ function disableStamp(stampId) {
   });
 }
 
-// ── Category modal ────────────────────────────────────────────────────────────
+function selectCatColor(color) {
+  document.getElementById('fCatColor').value = color;
+  document.querySelectorAll('#fCatColorRow .color-swatch').forEach(sw =>
+    sw.classList.toggle('active', sw.dataset.color === color));
+}
+
 function openCatModal(catId) {
   state.editCatId = catId || null;
   const c = catId ? state.categories.find(x => x.id === catId) : null;
   document.getElementById('catModalTitle').textContent = c ? 'Edit Category' : 'Add Category';
   document.getElementById('fCatName').value      = c ? c.name : '';
   document.getElementById('fCatCreatedBy').value = c ? (c.createdBy || '') : state.currentUser;
+  const color = (c && c.color) ? c.color : '#4A90D9';
+  selectCatColor(color);
   openModal('catModal');
 }
 
 function saveCat() {
   const name = document.getElementById('fCatName').value.trim();
   if (!name) { showToast('Please enter a category name', 'error'); return; }
-  const payload = { name, createdBy: document.getElementById('fCatCreatedBy').value.trim() };
+  const payload = {
+    name,
+    color:     document.getElementById('fCatColor').value || '#4A90D9',
+    createdBy: document.getElementById('fCatCreatedBy').value.trim(),
+  };
 
   const d = loadFromStorage();
   if (state.editCatId) {
     const idx = d.categories.findIndex(c => c.id === state.editCatId);
     if (idx >= 0) d.categories[idx] = { ...d.categories[idx], ...payload, id: state.editCatId };
+    // stampIds preserved via spread above
     showToast('Category updated ✓', 'success');
   } else {
-    d.categories.push({ id: uuidv4(), ...payload, dateCreated: todayStr() });
+    d.categories.push({ id: uuidv4(), ...payload, stampIds: [], dateCreated: todayStr() });
     showToast('Category added ✓', 'success');
   }
   saveToStorage(d);
   loadCategories();
   closeModal('catModal');
-  populateCategorySelects();
   renderCategories();
   updateCounts();
 }
 
+function viewCategoryStamps(catId) {
+  // Switch to Directory tab — stamps are identified by catId's stampIds list
+  const d   = loadFromStorage();
+  const cat = d.categories.find(c => c.id === catId);
+  if (!cat) return;
+  state.dirCatFilter = new Set(cat.stampIds || []);
+  switchTab('directory');
+  document.getElementById('dirSearch').value       = '';
+  document.getElementById('dirFilterType').value   = '';
+  document.getElementById('dirFilterStatus').value = 'all';
+  renderDirectory();
+  // Clear after render so normal browsing isn't affected
+  state.dirCatFilter = null;
+}
+
+// ── Category stamp tagging ────────────────────────────────────────────────────
+function openCatStampsModal(catId) {
+  state.csCatId = catId;
+  const cat = state.categories.find(c => c.id === catId);
+  if (!cat) return;
+  document.getElementById('catStampsModalTitle').textContent = 'Tag Stamps — "' + cat.name + '"';
+  state.csSelected = new Set(cat.stampIds || []);
+  document.getElementById('csSearch').value       = '';
+  document.getElementById('csFilterType').value   = '';
+  document.getElementById('csFilterStatus').value = 'active';
+  renderCatStampSelector();
+  openModal('catStampsModal');
+}
+
+function renderCatStampSelector() {
+  const q      = (document.getElementById('csSearch').value || '').toLowerCase();
+  const type   = document.getElementById('csFilterType').value;
+  const status = document.getElementById('csFilterStatus').value;
+  const today  = todayStr();
+
+  const stamps = state.stamps.filter(s => {
+    if (status === 'active'   &&  s.isDisabled) return false;
+    if (status === 'disabled' && !s.isDisabled) return false;
+    if (type === 'Regular' &&  s.isEvent) return false;
+    if (type === 'Event'   && !s.isEvent) return false;
+    if (q) {
+      const hay = (s.name+' '+s.country+' '+s.state+' '+s.location+' '+s.description).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  // Tagged stamps float to top
+  stamps.sort((a, b) => {
+    const at = state.csSelected.has(a.id) ? 0 : 1;
+    const bt = state.csSelected.has(b.id) ? 0 : 1;
+    return at !== bt ? at - bt : a.name.localeCompare(b.name);
+  });
+
+  document.getElementById('csSelCount').innerHTML = '<strong>' + state.csSelected.size + '</strong> tagged';
+
+  const list = document.getElementById('catStampSelectorList');
+  if (!stamps.length) {
+    list.innerHTML = '<div style="padding:32px;text-align:center;color:var(--mid)">No stamps match your filters</div>';
+    return;
+  }
+
+  list.innerHTML = stamps.map(s => {
+    const tagged = state.csSelected.has(s.id);
+    const tags   = [];
+    if (s.isDisabled) tags.push('<span class="badge badge-disabled">Disabled</span>');
+    if (s.isEvent) {
+      const end = s.eventEndDate || s.eventDate || '';
+      tags.push(end && end < today
+        ? '<span class="badge badge-past">Past Event</span>'
+        : '<span class="badge badge-event">Event</span>');
+    }
+    const dl = s.isEvent && s.eventDate
+      ? s.eventDate + (s.eventEndDate && s.eventEndDate !== s.eventDate ? ' → ' + s.eventEndDate : '')
+      : (s.dateAdded || '');
+    return '<div class="stamp-selector-item ' + (tagged ? 'selected' : '') + '" onclick="toggleCatStamp(\'' + s.id + '\')">'
+      + '<input type="checkbox" ' + (tagged ? 'checked' : '') + ' onclick="event.stopPropagation();toggleCatStamp(\'' + s.id + '\')">'
+      + '<div class="ssi-info">'
+      + '<div class="ssi-name">' + esc(s.name) + (s.rating ? ' ' + starsHtml(s.rating) : '') + '</div>'
+      + '<div class="ssi-meta">'
+      + '<span>' + esc(s.country) + (s.state ? ' · ' + esc(s.state) : '') + '</span>'
+      + (s.location ? '<span>📍 ' + esc(s.location) + '</span>' : '')
+      + (dl         ? '<span>📅 ' + dl + '</span>' : '')
+      + '</div></div>'
+      + '<div class="ssi-tags">' + tags.join('') + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function toggleCatStamp(stampId) {
+  if (state.csSelected.has(stampId)) state.csSelected.delete(stampId);
+  else state.csSelected.add(stampId);
+  renderCatStampSelector();
+}
+
+function saveCatStamps() {
+  const stampIds = [...state.csSelected];
+  const d = loadFromStorage();
+  const idx = d.categories.findIndex(c => c.id === state.csCatId);
+  if (idx >= 0) d.categories[idx].stampIds = stampIds;
+  saveToStorage(d);
+  loadCategories();
+  closeModal('catStampsModal');
+  renderCategories();
+  updateCounts();
+  showToast('Saved ' + stampIds.length + ' stamp' + (stampIds.length!==1?'s':'') + ' tagged ✓', 'success');
+}
+
 function deleteCat(catId, name) {
-  confirm2('Delete category "' + name + '"? Stamps using this category will not be changed.', () => {
+  confirm2('Delete category "' + name + '"? Tagged stamps will not be affected.', () => {
     const d = loadFromStorage();
     d.categories = d.categories.filter(c => c.id !== catId);
     saveToStorage(d);
     loadCategories();
-    populateCategorySelects();
     renderCategories();
     updateCounts();
     showToast('Category deleted', 'success');
   });
 }
 
-// ── Import / Export ───────────────────────────────────────────────────────────
 function openIoModal() {
-  renderCatPdfList();
   _pendingImport = null;
   document.getElementById('importPreview').style.display = 'none';
   document.getElementById('importStatus').textContent    = '';
@@ -1724,11 +2145,11 @@ function renderCatPdfList() {
     return;
   }
   list.innerHTML = state.categories.map(c => {
-    const n = state.stamps.filter(s => s.category === c.name).length;
+    const n = (c.stampIds || []).length;
     return '<div class="cat-pdf-row">'
       + '<div><div class="cat-pdf-name">' + esc(c.name) + '</div>'
-      + '<div class="cat-pdf-count">' + n + ' stamp' + (n!==1?'s':'') + ' (including disabled &amp; past events)</div></div>'
-      + '<button class="btn btn-outline btn-sm" onclick="exportCategoryPDF(\'' + c.id + '\')">🖨️ Print PDF</button>'
+      + '<div class="cat-pdf-count">' + n + ' stamp' + (n!==1?'s':'') + ' tagged</div></div>'
+      + '<button class="btn btn-outline btn-sm" onclick="exportCategoryPDF(\'' + c.id + '\')"' + (n===0?' disabled style="opacity:.4;cursor:not-allowed"':'') + '>🖨️ Print PDF</button>'
       + '</div>';
   }).join('');
 }
@@ -1758,56 +2179,54 @@ function exportCSV() {
 function exportCategoryPDF(catId) {
   const cat = state.categories.find(c => c.id === catId);
   if (!cat) return;
-  const stamps = state.stamps.filter(s => s.category === cat.name).sort((a,b) => a.name.localeCompare(b.name));
-  const today  = todayStr();
+  const ids    = cat.stampIds || [];
+  const stamps = state.stamps.filter(s => ids.includes(s.id)).sort((a,b) => a.name.localeCompare(b.name));
+  if (!stamps.length) { showToast('No stamps tagged to this category', 'error'); return; }
+  const today = todayStr();
 
   const rows = stamps.map((s, i) => {
-    const status = s.isDisabled ? '(Disabled)'
-      : (s.isEvent && (s.eventEndDate||s.eventDate||'') < today ? '(Past Event)'
-      : (s.isEvent ? 'Event' : 'Active'));
-    const dl = s.isEvent ? (s.eventDate||'') + (s.eventEndDate && s.eventEndDate!==s.eventDate ? ' → '+s.eventEndDate : '') : '';
-    const bg = i%2===0 ? '#f8f9fa' : '#fff';
-    return '<tr style="background:'+bg+'">'
-      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+(i+1)+'</td>'
-      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px;font-weight:600">'+esc(s.name)+'</td>'
-      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+esc(s.country)+(s.state?' · '+esc(s.state):'')+'</td>'
-      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+esc(s.location||'')+'</td>'
-      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+dl+'</td>'
-      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px;color:'+(s.isDisabled?'#999':(s.isEvent?'#D48B10':'#27AE60'))+'">'+status+'</td>'
+    const isEvent    = s.isEvent;
+    const isPast     = isEvent && (s.eventEndDate || s.eventDate || '') < today;
+    const status     = s.isDisabled ? 'Disabled' : isPast ? 'Past Event' : isEvent ? 'Event' : 'Active';
+    const statusCol  = s.isDisabled ? '#999' : isPast ? '#8E44AD' : isEvent ? '#D48B10' : '#27AE60';
+    const eventDates = isEvent
+      ? (s.eventDate || '') + (s.eventEndDate && s.eventEndDate !== s.eventDate ? ' → ' + s.eventEndDate : '')
+      : '—';
+    const bg = i % 2 === 0 ? '#f8f9fa' : '#fff';
+    const td = 'padding:6px 10px;border-bottom:1px solid #e0e6ed;font-size:13px';
+    return '<tr style="background:' + bg + '">'
+      + '<td style="' + td + ';width:32px;color:#5D6D7E">' + (i+1) + '</td>'
+      + '<td style="' + td + ';font-weight:600">' + esc(s.name) + '</td>'
+      + '<td style="' + td + '">' + esc(s.country) + (s.state ? ' · ' + esc(s.state) : '') + '</td>'
+      + '<td style="' + td + '">' + eventDates + '</td>'
+      + '<td style="' + td + ';color:' + statusCol + '">' + status + '</td>'
       + '</tr>';
   }).join('');
 
-  const colIds = new Set(state.myCollection);
-  const chkRows = stamps.map((s, i) => {
-    const bg = i%2===0 ? '#f8f9fa' : '#fff';
-    return '<tr style="background:'+bg+'">'
-      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px;text-align:center">'+(colIds.has(s.id)?'✓':'')+'</td>'
-      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+esc(s.name)+'</td>'
-      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+esc(s.country)+(s.state?' · '+esc(s.state):'')+'</td>'
-      + '<td style="padding:8px 10px;border-bottom:1px solid #e0e6ed;font-size:13px">'+esc(s.location||'')+'</td>'
-      + '</tr>';
-  }).join('');
-
-  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+esc(cat.name)+' — Souvenir Stamps</title>'
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + esc(cat.name) + ' — Souvenir Stamps</title>'
     + '<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">'
-    + '<style>body{font-family:\'Figtree\',sans-serif;margin:0;padding:32px 40px;color:#2C3E50}'
-    + 'h1{font-family:\'DM Serif Display\',serif;font-size:28px;margin-bottom:4px}'
-    + '.sub{font-size:13px;color:#5D6D7E;margin-bottom:24px}'
-    + 'h2{font-family:\'DM Serif Display\',serif;font-size:18px;color:#3070B8;margin:28px 0 10px;border-bottom:2px solid #E0E6ED;padding-bottom:6px}'
+    + '<style>'
+    + 'body{font-family:\'Figtree\',sans-serif;margin:0;padding:32px 40px;color:#2C3E50}'
+    + 'h1{font-family:\'DM Serif Display\',serif;font-size:26px;margin-bottom:4px}'
+    + '.sub{font-size:12px;color:#5D6D7E;margin-bottom:20px}'
     + 'table{width:100%;border-collapse:collapse}'
-    + 'th{background:#4A90D9;color:#fff;padding:9px 10px;text-align:left;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}'
-    + '.footer{margin-top:32px;font-size:11px;color:#BDC3C7;border-top:1px solid #E0E6ED;padding-top:10px}'
-    + '@media print{body{padding:20px 24px}}</style></head><body>'
-    + '<h1>'+esc(cat.name)+'</h1>'
-    + '<div class="sub">Souvenir Stamps · Hunt Category Report &nbsp;·&nbsp; Generated '
-    + new Date().toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric'})
-    + ' &nbsp;·&nbsp; '+stamps.length+' stamp'+(stamps.length!==1?'s':'')+' total'
-    + (cat.createdBy ? ' &nbsp;·&nbsp; Created by '+esc(cat.createdBy) : '')+'</div>'
-    + '<h2>Full Stamp List</h2>'
-    + '<table><thead><tr><th style="width:36px">#</th><th>Stamp Name</th><th>Country / State</th><th>Location</th><th>Event Dates</th><th>Status</th></tr></thead><tbody>'+rows+'</tbody></table>'
-    + '<h2>Collection Checklist — '+esc(state.currentUser)+'</h2>'
-    + '<table><thead><tr><th style="width:40px;text-align:center">✓</th><th>Stamp Name</th><th>Country / State</th><th>Location</th></tr></thead><tbody>'+chkRows+'</tbody></table>'
-    + '<div class="footer">Souvenir Stamps v3 Standalone · Exported by '+esc(state.currentUser)+'</div>'
+    + 'th{background:#4A90D9;color:#fff;padding:7px 10px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}'
+    + '.footer{margin-top:28px;font-size:11px;color:#BDC3C7;border-top:1px solid #E0E6ED;padding-top:10px}'
+    + '@media print{body{padding:16px 20px}}'
+    + '</style></head><body>'
+    + '<h1>' + esc(cat.name) + '</h1>'
+    + '<div class="sub">Souvenir Stamps · Hunt Category &nbsp;·&nbsp; '
+    + new Date().toLocaleDateString('en-MY', {day:'numeric', month:'long', year:'numeric'})
+    + ' &nbsp;·&nbsp; ' + stamps.length + ' stamp' + (stamps.length !== 1 ? 's' : '') + ' tagged'
+    + (cat.createdBy ? ' &nbsp;·&nbsp; ' + esc(cat.createdBy) : '') + '</div>'
+    + '<table><thead><tr>'
+    + '<th style="width:32px">#</th>'
+    + '<th>Stamp Name / Location</th>'
+    + '<th>Country / State</th>'
+    + '<th>Event Dates</th>'
+    + '<th>Status</th>'
+    + '</tr></thead><tbody>' + rows + '</tbody></table>'
+    + '<div class="footer">Souvenir Stamps v3 · ' + esc(state.currentUser) + '</div>'
     + '<script>window.onload=function(){window.print();}<\/script>'
     + '</body></html>';
 
@@ -1816,10 +2235,7 @@ function exportCategoryPDF(catId) {
   win.document.close();
 }
 
-// ── Import: two-step (scan → preview → execute) ───────────────────────────────
-
-// Step 1: read the file and show a preview — no confirm dialog needed
-let _pendingImport = null; // holds parsed data between scan and execute
+let _pendingImport = null;
 
 async function scanImportFile(event) {
   const file = event.target.files[0];
@@ -1845,20 +2261,29 @@ async function scanImportFile(event) {
       return;
     }
 
-    // Detect version
     const isV2 = incoming.stampBooks === undefined;
     const ver  = isV2 ? 'V2' : 'V3';
+    const totalStamps    = incoming.stamps.length;
+    // V2 may store isEvent as type:"Event" string
+    const eventStamps    = incoming.stamps.filter(s => !!(s.isEvent || s.type === 'Event' || s.type === 'event')).length;
+    // V2 may store isDisabled differently
+    const disabledStamps = incoming.stamps.filter(s => !!(s.isDisabled || s.disabled || s.status === 'Disabled')).length;
+    const activeStamps   = totalStamps - disabledStamps;
 
-    // Count what's in the file
-    const totalStamps   = incoming.stamps.length;
-    const eventStamps   = incoming.stamps.filter(s => !!s.isEvent).length;
-    const disabledStamps= incoming.stamps.filter(s => !!s.isDisabled).length;
-    const activeStamps  = totalStamps - disabledStamps;
-    const totalCats     = (incoming.categories || []).length;
-    const colUsers      = Object.keys(incoming.collections || {});
-    const bkUsers       = Object.keys(incoming.stampBooks  || {});
+    // Count categories using stamp-first approach (mirrors executeImport logic)
+    const incomingCatsScan = incoming.categories || incoming.huntCategories || incoming.cats || [];
+    const catNamesScan = new Set();
+    incomingCatsScan.forEach(c => {
+      if (!c) return;
+      const k = typeof c === 'string' ? c : (c.name || c.categoryName || c.title || '');
+      if (k) catNamesScan.add(k);
+    });
+    incoming.stamps.forEach(s => { if (s.category) catNamesScan.add(s.category); });
+    const totalCats = catNamesScan.size;
 
-    // Build preview rows
+    const colUsers = Object.keys(incoming.collections || {});
+    const bkUsers  = Object.keys(incoming.stampBooks  || {});
+
     const row = (icon, label, value, highlight) =>
       '<div style="display:flex;gap:8px;align-items:baseline">'
       + '<span style="width:20px;text-align:center">' + icon + '</span>'
@@ -1868,24 +2293,22 @@ async function scanImportFile(event) {
 
     bodyEl.innerHTML =
       '<div style="font-size:.78rem;font-weight:700;color:var(--mid);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Detected: Souvenir Stamps ' + ver + ' backup — "' + file.name + '"</div>'
-      + row('🏷️', 'Total stamps',            totalStamps)
-      + row('✅', 'Active stamps',            activeStamps,  'var(--green)')
-      + row('🚫', 'Disabled stamps',          disabledStamps, disabledStamps > 0 ? 'var(--mid)' : 'var(--light)')
-      + row('📅', 'Event-type stamps',        eventStamps,    eventStamps    > 0 ? 'var(--gold-dk)' : 'var(--light)')
-      + row('🗂️', 'Hunt categories',          totalCats,      totalCats      > 0 ? 'var(--sky)' : 'var(--red)')
-      + row('👤', 'Collections (users)',       colUsers.length > 0 ? colUsers.join(', ') : 'none', colUsers.length > 0 ? 'var(--dark)' : 'var(--light)')
+      + row('🏷️', 'Total stamps',        totalStamps)
+      + row('✅', 'Active stamps',        activeStamps,   'var(--green)')
+      + row('🚫', 'Disabled stamps',      disabledStamps, disabledStamps > 0 ? 'var(--mid)' : 'var(--light)')
+      + row('📅', 'Event-type stamps',    eventStamps,    eventStamps    > 0 ? 'var(--gold-dk)' : 'var(--light)')
+      + row('🗂️', 'Hunt categories',      totalCats,      totalCats      > 0 ? 'var(--sky)' : 'var(--red)')
+      + row('👤', 'Collections (users)',  colUsers.length > 0 ? colUsers.join(', ') : 'none', colUsers.length > 0 ? 'var(--dark)' : 'var(--light)')
       + (isV2 ? '<div style="font-size:.76rem;color:var(--mid);margin-top:4px">ℹ️ V2 backup — your existing Stamp Books will be kept.</div>' :
                 '<div style="font-size:.76rem;color:var(--mid);margin-top:4px">Stamp books for: ' + (bkUsers.length ? bkUsers.join(', ') : 'none') + '</div>');
 
-    warnEl.textContent = totalCats === 0 ? '⚠️ File has no categories' : '';
-
-    // Stash parsed data for executeImport
+    warnEl.textContent = totalCats === 0 ? '⚠️ No categories found — none will be imported' : '';
     _pendingImport = { incoming, isV2, ver, file: file.name };
     previewEl.style.display = '';
 
   } catch(e) {
-    statusEl.style.color   = 'var(--red)';
-    statusEl.textContent   = '✗ Could not read file: ' + (e.message || 'JSON parse error');
+    statusEl.style.color = 'var(--red)';
+    statusEl.textContent = '✗ Could not read file: ' + (e.message || 'JSON parse error');
     document.getElementById('importFileInput').value = '';
   }
 }
@@ -1897,7 +2320,6 @@ function cancelImportPreview() {
   document.getElementById('importFileInput').value       = '';
 }
 
-// Step 2: execute the import using the already-parsed data
 function executeImport() {
   if (!_pendingImport) return;
 
@@ -1912,31 +2334,74 @@ function executeImport() {
   statusEl.textContent    = 'Importing…';
 
   try {
-    // Normalise stamps
-    const stamps = (incoming.stamps || []).map(s => ({
-      id:           s.id           || uuidv4(),
-      name:         s.name         || '',
-      country:      s.country      || '',
-      state:        s.state        || '',
-      category:     s.category     || '',
-      type:         s.type         || 'Regular',
-      location:     s.location     || '',
-      description:  s.description  || '',
-      referenceUrl: s.referenceUrl || '',
-      isEvent:      !!s.isEvent,       // safe boolean coercion
-      eventDate:    s.eventDate    || '',
-      eventEndDate: s.eventEndDate || '',
-      isDisabled:   !!s.isDisabled,    // safe boolean coercion
-      dateAdded:    s.dateAdded    || todayStr(),
-    }));
+    const stamps = (incoming.stamps || []).map(s => {
+      // V2 compatibility: event stored as type:"Event" string, not isEvent boolean
+      const isEvent = !!(s.isEvent || s.type === 'Event' || s.type === 'event');
+      // V2 compatibility: disabled stored as disabled:true or status:"Disabled" or isDisabled
+      const isDisabled = !!(s.isDisabled || s.disabled || s.status === 'Disabled' || s.status === 'disabled');
+      return {
+        id:           s.id           || uuidv4(),
+        name:         s.name         || s.location || s.stampName || '',  // V2 used location or stampName
+        address:      s.address      || '',
+        createdBy:    s.createdBy    || '',
+        country:      s.country      || '',
+        state:        s.state        || '',
+        category:     s.category     || '',          // kept for V2 stampId rebuild below
+        type:         s.type         || 'Regular',
+        location:     s.location     || s.name      || '',
+        description:  s.description  || s.notes     || '',
+        referenceUrl: s.referenceUrl || s.url        || '',
+        isEvent,
+        eventDate:    s.eventDate    || s.startDate  || '',
+        eventEndDate: s.eventEndDate || s.endDate    || '',
+        isDisabled,
+        dateAdded:    s.dateAdded    || s.createdAt  || todayStr(),
+        rating:       s.rating       || null,
+      };
+    });
 
-    // Normalise categories
-    const categories = (incoming.categories || []).map(c => ({
-      id:          c.id          || uuidv4(),
-      name:        c.name        || '',
-      createdBy:   c.createdBy   || '',
-      dateCreated: c.dateCreated || todayStr(),
-    }));
+    // ── Categories: stamp-first approach ──────────────────────────────────────
+    // The ONLY guaranteed source for V2 category data is the category string
+    // on each stamp. We always derive from stamps first, then enrich with any
+    // metadata found in incoming.categories (which may be absent, a string array,
+    // or a full object array depending on the V2 version).
+
+    // Step 1 — build a lookup of category name → metadata from the file
+    const incomingCats = incoming.categories || incoming.huntCategories || incoming.cats || [];
+    const catMeta = {};
+    incomingCats.forEach(c => {
+      if (!c) return;
+      // Handle both string entries and object entries
+      if (typeof c === 'string') {
+        catMeta[c] = catMeta[c] || {};
+      } else {
+        const key = c.name || c.categoryName || c.title || '';
+        if (key) catMeta[key] = c;
+      }
+    });
+
+    // Step 2 — collect every unique category name that appears on any stamp
+    const catNames = new Set();
+    stamps.forEach(s => { if (s.category) catNames.add(s.category); });
+    // Also add any category names that came from the file but may have no stamps yet
+    Object.keys(catMeta).forEach(k => { if (k) catNames.add(k); });
+
+    // Step 3 — build final categories array
+    const categories = [...catNames].map(name => {
+      const meta = catMeta[name] || {};
+      // For V3 backups, stampIds may already exist on meta
+      const ids = Array.isArray(meta.stampIds) && meta.stampIds.length > 0
+        ? meta.stampIds
+        : stamps.filter(s => s.category === name).map(s => s.id);
+      return {
+        id:          meta.id          || uuidv4(),
+        name,
+        color:       meta.color       || meta.colour || '',
+        createdBy:   meta.createdBy   || '',
+        dateCreated: meta.dateCreated || todayStr(),
+        stampIds:    ids,
+      };
+    });
 
     const current = loadFromStorage();
     const merged  = {
@@ -1949,25 +2414,18 @@ function executeImport() {
     };
 
     saveToStorage(merged);
-
-    // Verify what was actually saved
     const saved = loadFromStorage();
 
-    // Reload state from storage
     loadStamps(); loadCategories(); loadCollection(); loadBooks();
 
-    // Reset directory filters so everything is visible
     document.getElementById('dirSearch').value       = '';
-    document.getElementById('dirFilterCat').value    = '';
     document.getElementById('dirFilterType').value   = '';
-    document.getElementById('dirFilterStatus').value = 'all';
+    document.getElementById('dirFilterStatus').value = 'active';
 
     renderAll();
-    renderCatPdfList();
     closeModal('ioModal');
     switchTab('directory');
 
-    // Report using verified saved counts
     const evCount  = saved.stamps.filter(s =>  s.isEvent).length;
     const disCount = saved.stamps.filter(s =>  s.isDisabled).length;
     const actCount = saved.stamps.filter(s => !s.isDisabled).length;
@@ -1992,11 +2450,9 @@ function executeImport() {
   }
 }
 
-// ── Utilities ─────────────────────────────────────────────────────────────────
 function populateCategorySelects() {
-  const opts = '<option value="">All Categories</option>'
-    + state.categories.map(c => '<option value="' + esc(c.name) + '">' + esc(c.name) + '</option>').join('');
-  document.getElementById('dirFilterCat').innerHTML = opts;
+  // No category dropdowns remain in directory or stamp modal.
+  // Categories are managed independently in the Hunt Categories tab.
 }
 
 function openModal(id)  { document.getElementById(id).classList.add('open');    }
@@ -2041,8 +2497,58 @@ function showToast(msg, type) {
   toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
+// ── Star rating widget ────────────────────────────────────────────────────────
+let _currentRating = 0;
+
+function initStarWidget() {
+  const container = document.getElementById('fStampStars');
+  const stars     = container.querySelectorAll('.star');
+
+  stars.forEach(star => {
+    const v = parseInt(star.dataset.v);
+
+    star.addEventListener('mouseover', () => {
+      stars.forEach(s => {
+        s.classList.remove('hovered');
+        if (parseInt(s.dataset.v) <= v) s.classList.add('hovered');
+      });
+    });
+
+    star.addEventListener('mouseout', () => {
+      stars.forEach(s => s.classList.remove('hovered'));
+    });
+
+    star.addEventListener('click', () => {
+      _currentRating = v;
+      updateStarDisplay();
+    });
+  });
+}
+
+function updateStarDisplay() {
+  const stars    = document.querySelectorAll('#fStampStars .star');
+  const clearBtn = document.getElementById('fStampRatingClear');
+  stars.forEach(s => {
+    s.classList.toggle('filled', parseInt(s.dataset.v) <= _currentRating);
+  });
+  clearBtn.style.display = _currentRating > 0 ? '' : 'none';
+}
+
+function clearStampRating() {
+  _currentRating = 0;
+  updateStarDisplay();
+}
+
+function starsHtml(rating) {
+  if (!rating || rating < 1) return '';
+  return '<span class="stars-display" title="' + rating + ' / 5">'
+    + '★'.repeat(rating) + '<span style="opacity:.35">' + '★'.repeat(5 - rating) + '</span>'
+    + '</span>';
+}
+
+initStarWidget();
 init();
 </script>
+
 </body>
 </html>
